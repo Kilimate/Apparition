@@ -2,9 +2,9 @@
     Developer: CF4_99
     Version: 1.0.0
     Project Start Date: 6/10/21
-    Version Release Date: ?/?/22
+    Version Release Date: 1/29/23
     
-    Menu Source & Current Update: < GitHub Source Here >
+    Menu Source & Current Update: https://github.com/CF4x99/Apparition
     Discord: CF4_99#9999
     YouTube: https://www.youtube.com/c/CF499
 
