@@ -6,6 +6,7 @@ override_player_damage(einflictor, eattacker, idamage, idflags, smeansofdeath, w
     if(isDefined(self.DemiGod))
     {
         self FakeDamageFrom(vdir);
+        
         return 0;
     }
 

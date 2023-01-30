@@ -163,36 +163,24 @@ SetDoheartText(text)
     if(isDefined(level.DoheartText))
         level.DoheartText destroy();
 
-    level.DoheartText = createServerText("objective", 2, 1, "", "CENTER", "CENTER", 0, -215, 1, (1, 1, 1));
+    level.DoheartText = level createServerText("objective", 2, 1, "", "CENTER", "CENTER", 0, -215, 1, (1, 1, 1));
     
     switch(level.DoheartStyle)
     {
-        case "Type Writer":
-            level thread TypeWriterText(level.DoheartSavedText, level.DoheartText);
+        case "Pulsing":
+            level thread PulsingText(level.DoheartSavedText, level.DoheartText);
             break;
         
         case "Pulse Effect":
             level thread PulseFXText(level.DoheartSavedText, level.DoheartText);
             break;
         
-        case "Rain":
-            level thread RainText(level.DoheartSavedText, level.DoheartText);
-            break;
-        
-        case "CYCL":
-            level thread CYCLText(level.DoheartSavedText, level.DoheartText);
-            break;
-        
-        case "KRDR":
-            level thread KRDRText(level.DoheartSavedText, level.DoheartText);
-            break;
-        
         case "Moving":
             level thread RandomPosText(level.DoheartSavedText, level.DoheartText);
             break;
         
-        case "Pulsing":
-            level thread PulsingText(level.DoheartSavedText, level.DoheartText);
+        case "Fade Effect":
+            level thread FadingTextEffect(level.DoheartSavedText, level.DoheartText);
             break;
         
         default:

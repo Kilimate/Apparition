@@ -653,8 +653,8 @@ runMenuIndex(menu)
             
             self addMenu(menu, "Doheart Options");
                 self addOptBool(level.Doheart, "Doheart", ::Doheart);
-                self addOptSlider("Text", ::DoheartTextPass, CleanName(bot::get_host_player() getName()) + ";" + level.menuName + ";CF4_99;Custom");
-                self addOptSlider("Style", ::SetDoheartStyle, "Pulsing;Type Writer;Pulse Effect;Rain;CYCL;KRDR;Moving");
+                self addOptSlider("Text", ::DoheartTextPass, CleanName(bot::get_host_player() getName()) + ";" + level.menuName + ";CF4_99;Discord.gg/MXT;Custom");
+                self addOptSlider("Style", ::SetDoheartStyle, "Pulsing;Pulse Effect;Moving;Fade Effect");
             break;
         
         case "Lobby Timer Options":
@@ -2050,12 +2050,12 @@ RefreshMenu(menu, curs, force)
         return;
     }
     
-    if(self hasMenu() && self isInMenu() && !isDefined(self.menu["inKeyboard"]) && !isDefined(self.menu["CreditsPlaying"]))
+    if(self hasMenu() && self isInMenu() && !isDefined(self.menu["DisableMenuControls"]))
     {
         if(isDefined(menu) && isDefined(curs))
         {
             foreach(player in level.players)
-                if(player hasMenu() && player isInMenu() && player getCurrent() == menu && !isDefined(player.menu["inKeyboard"]) && !isDefined(self.menu["CreditsPlaying"]))
+                if(player hasMenu() && player isInMenu() && player getCurrent() == menu && !isDefined(player.menu["DisableMenuControls"]))
                     if(isDefined(player.menu["ui"]["text"][curs]) || isDefined(force) && force)
                         player drawText();
         }

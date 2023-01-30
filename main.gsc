@@ -1,13 +1,16 @@
 /*
     Menu: Apparition
     Developer: CF4_99
-    Version: 1.0.0
+    Version: 1.0.1
     Project Start Date: 6/10/21
-    Version Release Date: 1/29/23
+    Version Release Date: 1/30/23
     
     Menu Source & Current Update: https://github.com/CF4x99/Apparition
     Discord: CF4_99#9999
     YouTube: https://www.youtube.com/c/CF499
+
+    If you are using Crafty's Compiler/Injector, make sure you have the latest build. If not, you will get a syntax error.
+    Latest Build: https://github.com/LJW-Dev/Black-Ops-3-GSC-Compiler/releases/tag/1.0
 
     
     Credits: 
@@ -99,10 +102,13 @@
 #include scripts\shared\laststand_shared;
 #include scripts\shared\spawner_shared;
 #include scripts\shared\visionset_mgr_shared;
+#include scripts\shared\damagefeedback_shared;
+#include scripts\shared\ai\systems\destructible_character;
 #include scripts\shared\bots\_bot;
 #include scripts\shared\audio_shared;
 #include scripts\shared\_burnplayer;
 #include scripts\shared\flagsys_shared;
+#include scripts\shared\gameobjects_shared;
 
 #include scripts\zm\gametypes\_hud_message;
 #include scripts\zm\gametypes\_globallogic;
@@ -121,7 +127,6 @@
 #include scripts\zm\_zm_equipment;
 #include scripts\zm\_zm_utility;
 #include scripts\zm\_zm_blockers;
-#include scripts\zm\_zm_clone;
 #include scripts\zm\craftables\_zm_craftables;
 #include scripts\zm\_zm_powerups;
 #include scripts\zm\_zm_audio;
@@ -129,20 +134,13 @@
 #include scripts\zm\_zm_playerhealth;
 #include scripts\zm\_zm_magicbox;
 #include scripts\zm\_zm_unitrigger;
-#include scripts\zm\_zm_traps;
 #include scripts\zm\_zm_net;
 #include scripts\zm\_zm_laststand;
-#include scripts\zm\_zm_ai_faller;
 #include scripts\zm\bgbs\_zm_bgb_reign_drops;
 #include scripts\zm\_zm_bgb_machine;
 #include scripts\zm\_zm_bgb_token;
 #include scripts\zm\_zm_powerup_nuke;
 #include scripts\zm\_zm_powerup_fire_sale;
-#include scripts\zm\aats\_zm_aat_fire_works;
-#include scripts\zm\bgbs\_zm_bgb_burned_out;
-#include scripts\zm\bgbs\_zm_bgb_round_robbin;
-#include scripts\zm\_zm_powerup_weapon_minigun;
-#include scripts\zm\gametypes\_zm_gametype;
 
 #namespace duplicate_render;
 
@@ -160,6 +158,9 @@ __init__()
 
 init()
 {
+    level thread RGBFade();
+    level thread DefineOnce();
+
     level.player_out_of_playable_area_monitor = 0;
     level.player_out_of_playable_area_monitor_callback = ::player_out_of_playable_area_monitor;
 
@@ -191,13 +192,9 @@ onPlayerSpawned()
     {
         if(!isDefined(level.AntiEndGame))
             self thread AntiEndGame();
-
-        level thread RGBFade();
-        level thread DefineOnce();
     }
 
-    if(!level flag::get("initial_blackscreen_passed"))
-        level flag::wait_till("initial_blackscreen_passed");
+    level flag::wait_till("initial_blackscreen_passed");
     
     if(self IsHost())
     {
@@ -221,7 +218,7 @@ DefineOnce()
     level.DefineOnce = true;
     
     level.menuName = "Apparition";
-    level.menuVersion = "1.0.0";
+    level.menuVersion = "1.0.1";
     level.MenuStatus = ["None", "Verified", "VIP", "Co-Host", "Admin", "Host", "Developer"];
     level.colorNames = ["Light Blue", "Raspberry", "Skyblue", "Pink", "Green", "Brown", "Blue", "Red", "Orange", "Purple", "Cyan", "Yellow", "Black", "White"];
     level.colors = [0, 110, 255, 135, 38, 87, 135, 206, 250, 255, 110, 255, 0, 255, 0, 101, 67, 33, 0, 0, 255, 255, 0, 0, 255, 128, 0, 100, 0, 255, 0, 255, 255, 255, 255, 0, 0, 0, 0, 255, 255, 255];

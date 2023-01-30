@@ -310,7 +310,7 @@ LoadMenuVars() //Pre-Set Menu Variables.
     self.menu["Main_Color"] = divideColor(200, 0, 0);
 
     //Change 'undefined' to 'true' if you want to disable the option counter by default
-    self.menu["DisableOptionCounter"] = undefined;
+    self.menu["DisableOptionCounter"] = true;
 
     //Loading Saved Menu Variables
     dvar = GetDvarString("MenuTheme" + self GetXUID());

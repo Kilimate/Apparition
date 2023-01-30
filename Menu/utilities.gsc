@@ -403,9 +403,6 @@ TraceBullet()
 
 SpawnScriptModel(origin, model, angles, time)
 {
-    if(GetEntArray().size >= 1090)
-        return;
-    
     if(isDefined(time))
         wait time;
 
@@ -441,170 +438,6 @@ SetTextFX(text, time)
 
     self hudFade(0, 0.5);
     self destroy();
-}
-
-TypeWriterText(text, hud)
-{
-    if(!isDefined(text) || !isDefined(hud))
-        return;
-    
-    while(isDefined(hud))
-    {
-        hud.color = divideColor(RandomInt(255), RandomInt(255), RandomInt(255));
-        string = "";
-
-        for(a = 0; a < text.size; a++)
-        {
-            string2 = "";
-
-            for(b = 0; b <= a; b++)
-                string2 += text[b];
-            
-            if(string2.size == text.size)
-                string = string2;
-            else
-                string = string2 + "|";
-
-            if(isDefined(hud))
-                hud SetText(string);
-
-            wait 0.1;
-        }
-
-        wait 1;
-
-        for(a = text.size; a >= 0; a--)
-        {
-            string2 = "";
-
-            for(b = 0; b < a; b++)
-                string2 += text[b];
-            
-            if(string2.size == 0)
-                string = "|";
-            else
-                string = string2 + "|";
-            
-            if(isDefined(hud))
-                hud SetText(string);
-
-            wait 0.1;
-        }
-
-        wait 0.25;
-    }
-}
-
-RainText(text, hud)
-{
-    if(!isDefined(text) || !isDefined(hud))
-        return;
-    
-    while(isDefined(hud))
-    {
-        string = "";
-
-        for(a = 0; a < text.size; a++)
-            string += "^" + RandomInt(7) + text[a];
-
-        if(isDefined(hud))
-            hud SetText(string);
-
-        wait 0.15;
-    }
-}
-
-KRDRText(text, hud)
-{
-    if(!isDefined(text) || !isDefined(hud))
-        return;
-    
-    while(isDefined(hud))
-    {
-        if(isDefined(col))
-            OldCol = col;
-        
-        if(isDefined(OldCol))
-        {
-            if(OldCol == 6)
-                col = 0;
-            else
-                col += 1;
-        }
-        else
-        {
-            col = 0;
-            OldCol = 6;
-        }
-        
-        for(a = 0; a < text.size; a++)
-        {
-            string = "";
-
-            for(b = 0; b < text.size; b++)
-                if(b == a)
-                    string += "^" + col + text[b] + "^7";
-                else
-                    string += text[b];
-
-            if(isDefined(hud))
-                hud SetText(string);
-
-            wait 0.1;
-        }
-
-        for(a = (text.size - 1); a >= 0; a--)
-        {
-            string = "";
-
-            for(b = 0; b < text.size; b++)
-                if(b == a)
-                    string += "^" + col + text[b]+"^7";
-                else
-                    string += text[b];
-
-            if(isDefined(hud))
-                hud SetText(string);
-
-            wait 0.1;
-        }
-    }
-}
-
-CYCLText(text, hud)
-{
-    if(!isDefined(text) || !isDefined(hud))
-        return;
-    
-    while(isDefined(hud))
-    {
-        if(isDefined(col))
-            OldCol = col;
-        
-        if(isDefined(OldCol))
-            col = (OldCol == 7) ? 0 : (col + 1);
-        else
-        {
-            col = 0;
-            OldCol = 7;
-        }
-        
-        for(a = 0; a < text.size; a++)
-        {
-            string = "^" + col;
-
-            for(b = 0; b < text.size; b++)
-                if(a == b)
-                    string += "^" + col + text[b] + "^" + OldCol;
-                else
-                    string += text[b];
-            
-            if(isDefined(hud))
-                hud SetText(string);
-
-            wait 0.1;
-        }
-    }
 }
 
 PulseFXText(text, hud)
@@ -671,6 +504,33 @@ PulsingText(text, hud)
 
             wait 0.6;
         }
+    }
+}
+
+FadingTextEffect(text, hud)
+{
+    if(!isDefined(text) || !isDefined(hud))
+        return;
+    
+    hud SetText(text);
+
+    while(isDefined(hud))
+    {
+        if(isDefined(hud))
+        {
+            hud hudFade(0, 1);
+            hud.color = divideColor(RandomInt(255), RandomInt(255), RandomInt(255));
+        }
+        
+        wait 0.25;
+
+        if(isDefined(hud))
+        {
+            hud hudFade(1, 1);
+            hud.color = divideColor(RandomInt(255), RandomInt(255), RandomInt(255));
+        }
+        
+        wait 0.25;
     }
 }
 

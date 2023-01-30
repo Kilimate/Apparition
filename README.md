@@ -1,12 +1,15 @@
     Menu: Apparition
     Developer: CF4_99
-    Version: 1.0.0
+    Version: 1.0.1
     Project Start Date: 6/10/21
-    Version Release Date: 1/29/23
+    Version Release Date: 1/30/23
     
     Menu Source & Current Update: https://github.com/CF4x99/Apparition
     Discord: CF4_99#9999
     YouTube: https://www.youtube.com/c/CF499
+
+    If you are using Crafty's Compiler/Injector, make sure you have the latest build. If not, you will get a syntax error.
+    Latest Build: https://github.com/LJW-Dev/Black-Ops-3-GSC-Compiler/releases/tag/1.0
 
     
     Credits: 
