@@ -24,7 +24,14 @@ BulletProjectile(projectile, type, player)
                 break;
             
             case "Spawnable":
-                SpawnScriptModel(player TraceBullet(), projectile);
+                bspawn = SpawnScriptModel(player TraceBullet(), projectile);
+
+                if(isDefined(bspawn))
+                {
+                    bspawn NotSolid();
+                    bspawn thread deleteAfter(5);
+                }
+                
                 break;
             
             case "Effect":

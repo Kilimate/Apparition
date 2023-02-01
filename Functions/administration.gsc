@@ -373,7 +373,12 @@ CustomSentry(origin)
                 v_target_pos = self.sentrygun_weapon.origin + VectorScale(AnglesToForward(v_curr_yaw), 40);
             }
             else
-                v_target_pos = zombie GetCentroid();
+            {
+                v_target_pos = zombie GetTagOrigin("j_head");
+
+                if(!isDefined(v_target_pos)) //Needed for AI that don't have the targeted bone tag(i.e. Spiders)
+                    v_target_pos = zombie GetTagOrigin("tag_body");
+            }
             
             self.sentrygun_weapon.angles = VectorToAngles(v_target_pos - self.sentrygun_weapon.origin);
             v_flash_pos = self.sentrygun_weapon GetTagOrigin("tag_flash");

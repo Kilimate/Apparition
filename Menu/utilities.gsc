@@ -245,6 +245,13 @@ getName()
     return GetSubStr(name, (a + 1));
 }
 
+GetPlayerFromEntityNumber(number)
+{
+    foreach(player in level.players)
+        if(player GetEntityNumber() == number)
+            return player;
+}
+
 destroyAfter(time)
 {
     wait time;
@@ -328,6 +335,58 @@ SetIncSlider(dir)
         self.menu_SS[menu][curs] = (self.menu_SS[menu][curs] > max) ? min : max;
     
     self.menu["ui"]["IntSlider"][curs] SetText("< " + self.menu_SS[menu][curs] + " >");
+}
+
+newMenu(menu, dontSave, i1)
+{
+    self notify("EndSwitchWeaponMonitor");
+    self endon("menuClosed");
+    
+    if(!isDefined(menu))
+    {
+        menu = self BackMenu();
+        self.menuParent[(self.menuParent.size - 1)] = undefined;
+    }
+    else
+    {
+        if(!isDefined(dontSave) || isDefined(dontSave) && !dontSave)
+        {
+            self.menuParent[self.menuParent.size] = self getCurrent();
+            self MenuArrays(self BackMenu());
+        }
+    }
+    
+    self.menu["currentMenu"] = menu;
+
+    if(IsSubStr(menu, "Weapon Options")) //Submenus that should be refreshed when player switches weapons
+    {
+        tokens = StrTok(menu, " ");
+
+        player = GetPlayerFromEntityNumber(Int(tokens[(tokens.size - 1)]));
+        player thread WatchMenuWeaponSwitch(self);
+    }
+
+    if(isDefined(i1))
+        self.EntityEditorNumber = i1;
+    
+    self DestroyOpts();
+    self drawText();
+    self SetMenuTitle();
+}
+
+WatchMenuWeaponSwitch(player)
+{
+    player endon("disconnect");
+    player endon("menuClosed");
+    player endon("EndSwitchWeaponMonitor");
+    
+    while(IsSubStr(player getCurrent(), "Weapon Options"))
+    {
+        self waittill("weapon_change", newWeapon);
+        
+        if(IsSubStr(player getCurrent(), "Weapon Options"))
+            player RefreshMenu(player getCurrent(), player getCursor(), true);
+    }
 }
 
 BackMenu()
@@ -518,17 +577,14 @@ FadingTextEffect(text, hud)
     {
         if(isDefined(hud))
         {
-            hud hudFade(0, 1);
             hud.color = divideColor(RandomInt(255), RandomInt(255), RandomInt(255));
+            hud hudFade(0, 1);
         }
         
         wait 0.25;
 
         if(isDefined(hud))
-        {
             hud hudFade(1, 1);
-            hud.color = divideColor(RandomInt(255), RandomInt(255), RandomInt(255));
-        }
         
         wait 0.25;
     }
@@ -1042,7 +1098,8 @@ MenuCredits()
     " ",
     "Thanks For Choosing ^1" + level.menuName,
     "YouTube - ^1CF4_99",
-    "Discord - ^1CF4_99#9999"
+    "Discord - ^1CF4_99#9999",
+    "Discord.gg/MXT"
     ];
     
     self thread MenuCreditsStart(MenuTextStartCredits);

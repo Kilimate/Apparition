@@ -589,15 +589,22 @@ GrapplingGun(player)
         {
             player waittill("weapon_fired");
             
-            pos = player TraceBullet();
-            ent = SpawnScriptModel(player.origin, "tag_origin");
+            trace = BulletTrace(self GetWeaponMuzzlePoint(), self GetWeaponMuzzlePoint() + VectorScale(AnglesToForward(self GetPlayerAngles()), 1000000), 0, self);
+            
+            pos = trace["position"];
+            surface = trace["surfacetype"];
+            
+            if(surface != "none")
+            {
+                ent = SpawnScriptModel(player.origin, "tag_origin");
 
-            player PlayerLinkTo(ent);
-            ent MoveTo(pos, 1);
+                player PlayerLinkTo(ent);
+                ent MoveTo(pos, 1);
 
-            ent waittill("movedone");
-            player Unlink();
-            ent delete();
+                ent waittill("movedone");
+                player Unlink();
+                ent delete();
+            }
         }
     }
     else
@@ -615,8 +622,8 @@ GravityGun(player)
     {
         player endon("disconnect");
 
-        player iPrintlnBold("[{+speed_throw}] To Pick Up Entities/Zombies/Players");
-        player iPrintlnBold("[{+attack}] To Launch");
+        player iPrintlnBold("Aim At Entities/Zombies/Players To Pick Them Up");
+        player iPrintlnBold("Shoot To Launch");
 
         grabEnt = undefined;
         
@@ -754,23 +761,20 @@ PowerUpMagnet(player)
 
     while(isDefined(player.PowerUpMagnet))
     {
-        if(isDefined(level.active_powerups) && level.active_powerups.size)
+        powerups = zm_powerups::get_powerups(player.origin, 500);
+
+        if(isDefined(powerups) && powerups.size)
         {
-            powerups = zm_powerups::get_powerups(player.origin, 500);
-
-            if(isDefined(powerups) && powerups.size)
+            foreach(index, powerup in powerups)
             {
-                foreach(index, powerup in powerups)
+                if(isDefined(powerup) && BulletTracePassed(player GetEye(), powerup.origin, 0, player) && !isDefined(powerup.movingtoplayer))
                 {
-                    if(BulletTracePassed(player GetEye(), powerup.origin, 0, player) && !isDefined(powerup.movingtoplayer))
-                    {
-                        powerup.movingtoplayer = true;
-                        powerup MoveTo(player GetTagOrigin("j_mainroot"), CalcDistance(1100, powerup.origin, player GetTagOrigin("j_mainroot")));
-                        wait 0.05;
+                    powerup.movingtoplayer = true;
+                    powerup MoveTo(player GetTagOrigin("j_mainroot"), CalcDistance(1100, powerup.origin, player GetTagOrigin("j_mainroot")));
+                    wait 0.05;
 
-                        if(isDefined(powerup))
-                            powerup.movingtoplayer = undefined;
-                    }
+                    if(isDefined(powerup)) //making sure the powerup still exists
+                        powerup.movingtoplayer = undefined;
                 }
             }
         }

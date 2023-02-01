@@ -1,3 +1,8 @@
+DisableTeleportEffect(player)
+{
+    player.DisableTeleportEffect = isDefined(player.DisableTeleportEffect) ? undefined : true;
+}
+
 TeleportPlayer(origin, player, angles)
 {
     if(!isDefined(origin))
@@ -20,8 +25,7 @@ TeleportPlayer(origin, player, angles)
     if(isDefined(angles))
         player SetPlayerAngles(angles);
 
-    PlayFX(level._effect["teleport_splash"], player.origin);
-    PlayFX(level._effect["teleport_aoe"], player.origin);
+    player PlayTeleportEffect();
 }
 
 OfficialSpawnPoint(point, player)
@@ -29,8 +33,7 @@ OfficialSpawnPoint(point, player)
     player SetOrigin(level.MenuSpawnPoints[point].origin);
     player SetPlayerAngles(level.MenuSpawnPoints[point].angles);
 
-    PlayFX(level._effect["teleport_splash"], player.origin);
-    PlayFX(level._effect["teleport_aoe"], player.origin);
+    player PlayTeleportEffect();
 }
 
 EntityTeleport(entity, player, eEntity)
@@ -72,8 +75,7 @@ EntityTeleport(entity, player, eEntity)
     player SetOrigin(ent.origin + (entAngleDir * distance));
     player SetPlayerAngles(VectorToAngles((ent.origin + (0, 0, 55)) - player GetEye()));
 
-    PlayFX(level._effect["teleport_splash"], player.origin);
-    PlayFX(level._effect["teleport_aoe"], player.origin);
+    player PlayTeleportEffect();
 }
 
 TeleportGun(player)
@@ -90,6 +92,7 @@ TeleportGun(player)
             player waittill("weapon_fired");
             
             player SetOrigin(player TraceBullet());
+            player PlayTeleportEffect();
         }
     }
     else
@@ -116,4 +119,15 @@ LoadSavedLocation(player)
     
     player SetOrigin(player.SavedOrigin);
     player SetPlayerAngles(player.SavedAngles);
+
+    player PlayTeleportEffect();
+}
+
+PlayTeleportEffect()
+{
+    if(!isDefined(self.DisableTeleportEffect))
+    {
+        PlayFX(level._effect["teleport_splash"], self.origin);
+        PlayFX(level._effect["teleport_aoe_kill"], self GetTagOrigin("j_spineupper"));
+    }
 }

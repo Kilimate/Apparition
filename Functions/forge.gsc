@@ -187,10 +187,15 @@ ForgeShootModel()
             self waittill("weapon_fired");
 
             spawn = SpawnScriptModel(self GetWeaponMuzzlePoint() + VectorScale(AnglesToForward(self GetPlayerAngles()), 10), ent);
-            spawn SetScale(self.forge["ModelScale"]);
-            
-            spawn Launch(VectorScale(AnglesToForward(self GetPlayerAngles()), 15000));
-            spawn thread deleteAfter(10);
+
+            if(isDefined(spawn))
+            {
+                spawn SetScale(self.forge["ModelScale"]);
+                spawn NotSolid();
+                
+                spawn Launch(VectorScale(AnglesToForward(self GetPlayerAngles()), 15000));
+                spawn thread deleteAfter(10);
+            }
         }
     }
     else

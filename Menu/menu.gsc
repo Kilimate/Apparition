@@ -120,6 +120,7 @@ runMenuIndex(menu)
                 self addOpt("Welcome", ::DisplayMessage, "Welcome To " + level.menuName);
                 self addOpt("Developer", ::DisplayMessage, level.menuName + " Was Developed By CF4_99");
                 self addOpt("YouTube", ::DisplayMessage, "YouTube: CF4_99");
+                self addOpt("Discord.gg/MXT", ::DisplayMessage, "Discord.gg/MXT");
             break;
         
         case "Power-Up Menu":
@@ -134,7 +135,10 @@ runMenuIndex(menu)
                 if(isDefined(powerups) && powerups.size)
                 {
                     for(a = 0; a < powerups.size; a++)
-                        self addOpt(CleanString(powerups[a]), ::SpawnPowerUp, powerups[a]);
+                        if(powerups[a] != "free_perk")
+                            self addOpt(CleanString(powerups[a]), ::SpawnPowerUp, powerups[a]);
+                        else
+                            self addOpt("Free Perk", ::SpawnPowerUp, powerups[a]);
                 }
                 else
                     self addOpt("No Power-Ups Found");
@@ -1030,7 +1034,7 @@ MenuOptionsPlayer(menu, player)
                 self addOptSlider("Clone", ::PlayerClone, "Clone;Dead", player);
                 self addOptBool(player.Invisibility, "Invisibility", ::Invisibility, player);
                 self addOptBool(player.SaveAndLoad, "Save & Load Position", ::SaveAndLoad, player);
-                self addOptSlider("Custom Crosshairs", ::CustomCrosshairs, "Disable;+;(+);.;o;<>;|-|;-|-;<3;" + CleanName(player getName()) + ";" + level.menuName + ";ItsFebiven;Extinct;CF4_99", player);
+                self addOptSlider("Custom Crosshairs", ::CustomCrosshairs, "Disable;+;(+);.;o;<>;|-|;-|-;<3;" + CleanName(player getName()) + ";" + level.menuName + ";CF4_99;Extinct;ItsFebiven;Discord.gg/MXT", player);
                 self addOptBool(player.NoTarget, "No Target", ::NoTarget, player);
                 self addOptBool(player.ReducedSpread, "Reduced Spread", ::ReducedSpread, player);
                 self addOptBool(player.MultiJump, "Multi-Jump", ::MultiJump, player);
@@ -1100,7 +1104,8 @@ MenuOptionsPlayer(menu, player)
         
         case "Teleport Menu":
             self addMenu(menu, "Teleport Menu");
-
+                self addOptBool(player.DisableTeleportEffect, "Disable Teleport Effect", ::DisableTeleportEffect, player);
+                
                 if(isDefined(level.MenuSpawnPoints) && level.MenuSpawnPoints.size)
                     self addOptIncSlider("Official Spawn Points", ::OfficialSpawnPoint, 0, 0, (level.MenuSpawnPoints.size - 1), 1, player);
                 

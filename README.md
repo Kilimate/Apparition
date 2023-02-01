@@ -1,15 +1,24 @@
     Menu: Apparition
     Developer: CF4_99
-    Version: 1.0.1
+    Version: 1.0.2
     Project Start Date: 6/10/21
-    Version Release Date: 1/30/23
+    Initial Release Date: 1/29/23
     
     Menu Source & Current Update: https://github.com/CF4x99/Apparition
     Discord: CF4_99#9999
     YouTube: https://www.youtube.com/c/CF499
+    https://discord.gg/MXT
 
     If you are using Crafty's Compiler/Injector, make sure you have the latest build. If not, you will get a syntax error.
     Latest Build: https://github.com/LJW-Dev/Black-Ops-3-GSC-Compiler/releases/tag/1.0
+
+
+    Controls:
+        Open: Aim & Knife
+        Scroll: Aim/Shoot Or Actionslot 1/2(Controller Users: Dpad up/down)
+        Slider Scroll: Actionslot 3/4(Controller Users: Dpad left/right)
+        Select: Use Button(PS Controller: Square || Xbox Controller: X)
+        Go Back/Exit: Knife
 
     
     Credits: 

@@ -1,18 +1,27 @@
 /*
     Menu: Apparition
     Developer: CF4_99
-    Version: 1.0.1
+    Version: 1.0.2
     Project Start Date: 6/10/21
-    Version Release Date: 1/30/23
+    Initial Release Date: 1/29/23
     
     Menu Source & Current Update: https://github.com/CF4x99/Apparition
     Discord: CF4_99#9999
     YouTube: https://www.youtube.com/c/CF499
+    https://discord.gg/MXT
 
     If you are using Crafty's Compiler/Injector, make sure you have the latest build. If not, you will get a syntax error.
     Latest Build: https://github.com/LJW-Dev/Black-Ops-3-GSC-Compiler/releases/tag/1.0
 
+
+    Controls:
+        Open: Aim & Knife
+        Scroll: Aim/Shoot Or Actionslot 1/2(Controller Users: Dpad up/down)
+        Slider Scroll: Actionslot 3/4(Controller Users: Dpad left/right)
+        Select: Use Button(PS Controller: Square || Xbox Controller: X)
+        Go Back/Exit: Knife
     
+
     Credits: 
         - Extinct ~ Ideas, Suggestions, Constructive Criticism, Spec-Nade, and LUI Hud
         - CraftyCritter ~ BO3 Compiler
@@ -87,8 +96,6 @@
 #include scripts\shared\ai\systems\gib;
 #include scripts\shared\tweakables_shared;
 #include scripts\shared\ai\systems\shared;
-#include scripts\shared\ai\systems\blackboard;
-#include scripts\shared\ai\systems\ai_interface;
 #include scripts\shared\flag_shared;
 #include scripts\shared\scoreevents_shared;
 #include scripts\shared\lui_shared;
@@ -103,20 +110,11 @@
 #include scripts\shared\spawner_shared;
 #include scripts\shared\visionset_mgr_shared;
 #include scripts\shared\damagefeedback_shared;
-#include scripts\shared\ai\systems\destructible_character;
 #include scripts\shared\bots\_bot;
-#include scripts\shared\audio_shared;
 #include scripts\shared\_burnplayer;
-#include scripts\shared\flagsys_shared;
-#include scripts\shared\gameobjects_shared;
 
-#include scripts\zm\gametypes\_hud_message;
 #include scripts\zm\gametypes\_globallogic;
-#include scripts\zm\gametypes\_globallogic_audio;
-#include scripts\zm\gametypes\_globallogic_score;
-#include scripts\zm\_zm_lightning_chain;
 #include scripts\zm\_util;
-#include scripts\zm\_zm_zonemgr;
 #include scripts\zm\_zm;
 #include scripts\zm\_zm_behavior;
 #include scripts\zm\_zm_bgb;
@@ -131,16 +129,10 @@
 #include scripts\zm\_zm_powerups;
 #include scripts\zm\_zm_audio;
 #include scripts\zm\_zm_spawner;
-#include scripts\zm\_zm_playerhealth;
 #include scripts\zm\_zm_magicbox;
 #include scripts\zm\_zm_unitrigger;
 #include scripts\zm\_zm_net;
 #include scripts\zm\_zm_laststand;
-#include scripts\zm\bgbs\_zm_bgb_reign_drops;
-#include scripts\zm\_zm_bgb_machine;
-#include scripts\zm\_zm_bgb_token;
-#include scripts\zm\_zm_powerup_nuke;
-#include scripts\zm\_zm_powerup_fire_sale;
 
 #namespace duplicate_render;
 

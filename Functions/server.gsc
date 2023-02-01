@@ -309,6 +309,9 @@ OpenAllDoors()
             }
         }
 
+        if(IsAllDoorsOpen())
+            break;
+
         wait 1;
     }
 
