@@ -268,6 +268,31 @@ SendEarthquake(player)
     Earthquake(1, 15, player.origin, 750);
 }
 
+SpecialMovements(player)
+{
+    player.SpecialMovements = isDefined(player.SpecialMovements) ? undefined : true;
+
+    if(isDefined(player.SpecialMovements))
+    {
+        player endon("disconnect");
+
+        while(isDefined(player.SpecialMovements))
+        {
+            player.b_wall_run_enabled = 1;
+            player AllowWallRun(1);
+            player AllowDoubleJump(1);
+
+            wait 0.1;
+        }
+    }
+    else
+    {
+        player.b_wall_run_enabled = 0;
+        player AllowWallRun(0);
+        player AllowDoubleJump(0);
+    }
+}
+
 SpecNade(player) //Credit to Extinct for his spec-nade
 {
     if(player isPlayerLinked() && !isDefined(player.SpecNade))
@@ -275,6 +300,9 @@ SpecNade(player) //Credit to Extinct for his spec-nade
     
     if(isDefined(player.NoclipBind) && !isDefined(player.SpecNade))
         return self iPrintlnBold("^1ERROR: ^7Player Has Noclip Bind Enabled");
+    
+    if(isDefined(player.DropCamera) && !isDefined(player.SpecNade))
+        return self iPrintlnBold("^1ERROR: ^7Player's Camera Has Been Dropped");
 
     player.SpecNade = isDefined(player.SpecNade) ? undefined : true;
 

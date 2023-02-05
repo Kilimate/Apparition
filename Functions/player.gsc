@@ -262,6 +262,32 @@ AttachSelfToPlayer(player)
         self Unlink();
 }
 
+PlayerDropCamera(player)
+{
+    if(isDefined(player.SpecNade) && !isDefined(player.DropCamera))
+        return self iPrintlnBold("^1ERROR: ^7You Can't Use This Option While Spec-Nade Is Enabled");
+    
+    player.DropCamera = isDefined(player.DropCamera) ? undefined : true;
+
+    if(isDefined(player.DropCamera))
+    {
+        player.camlinker = SpawnScriptModel(player GetTagOrigin("j_head"), "tag_origin");
+
+        player CameraSetPosition(player.camlinker);
+        //player CameraSetLookAt(grenade);
+        player CameraActivate(true);
+
+        player.camlinker Launch(VectorScale(AnglesToForward(self GetPlayerAngles()), 10));
+    }
+    else
+    {
+        player CameraActivate(false);
+
+        if(isDefined(player.camlinker))
+            player.camlinker delete();
+    }
+}
+
 FakeDerank(player)
 {
     player SetRank(0, 0);

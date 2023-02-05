@@ -572,13 +572,14 @@ FadingTextEffect(text, hud)
         return;
     
     hud SetText(text);
+    hud.color = divideColor(RandomInt(255), RandomInt(255), RandomInt(255));
 
     while(isDefined(hud))
     {
         if(isDefined(hud))
         {
-            hud.color = divideColor(RandomInt(255), RandomInt(255), RandomInt(255));
             hud hudFade(0, 1);
+            hud.color = divideColor(RandomInt(255), RandomInt(255), RandomInt(255));
         }
         
         wait 0.25;

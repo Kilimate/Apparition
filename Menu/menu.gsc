@@ -805,14 +805,14 @@ runMenuIndex(menu)
             
             self addMenu(menu, "Spawner");
                 self addOptSlider("Spawn Location", ::AISpawnLocation, "Crosshairs;Random;Self");
-                self addOpt("Spawn Zombie", ::ServerSpawnZombie);
+                self addOptIncSlider("Spawn Zombie", ::ServerSpawnAI, 1, 1, 10, 1, ::ServerSpawnZombie);
 
                 if(map != "Unknown")
                 {
                     maps = ["Shi No Numa", "The Giant", "Moon", "Kino Der Toten", "Der Eisendrache"];
 
                     if(isInArray(maps, map))
-                        self addOpt("Spawn Hellhound", ::ServerSpawnDog);
+                        self addOptIncSlider("Spawn Hellhound", ::ServerSpawnAI, 1, 1, 10, 1, ::ServerSpawnDog);
                     
                     
                     maps = ["Shadows Of Evil", "Revelations", "Gorod Krovi"];
@@ -821,42 +821,42 @@ runMenuIndex(menu)
                     {
                         if(map != "Gorod Krovi")
                         {
-                            self addOpt("Spawn Wasp", ::ServerSpawnWasp);
-                            self addOpt("Spawn Margwa", ::ServerSpawnMargwa);
+                            self addOptIncSlider("Spawn Wasp", ::ServerSpawnAI, 1, 1, 10, 1, ::ServerSpawnWasp);
+                            self addOptIncSlider("Spawn Margwa", ::ServerSpawnAI, 1, 1, 10, 1, ::ServerSpawnMargwa);
 
                             if(map == "Shadows Of Evil")
-                                self addOpt("Spawn Civil Protector", ::ServerSpawnCivilProtector);
+                                self addOptIncSlider("Spawn Civil Protector", ::ServerSpawnAI, 1, 1, 10, 1, ::ServerSpawnCivilProtector);
                         }
                         
                         if(map != "Revelations")
-                            self addOpt("Spawn Raps", ::ServerSpawnRaps);
+                            self addOptIncSlider("Spawn Raps", ::ServerSpawnAI, 1, 1, 10, 1, ::ServerSpawnRaps);
                     }
 
 
                     maps = ["Origins", "Der Eisendrache", "Revelations"];
 
                     if(isInArray(maps, map))
-                        self addOpt("Spawn Mechz", ::ServerSpawnMechz);
+                        self addOptIncSlider("Spawn Mechz", ::ServerSpawnAI, 1, 1, 10, 1, ::ServerSpawnMechz);
                     
                     if(map == "Gorod Krovi")
                     {
-                        self addOpt("Spawn Sentinel Drone", ::ServerSpawnSentinelDrone);
-                        self addOpt("Spawn Mangler", ::ServerSpawnMangler);
+                        self addOptIncSlider("Spawn Sentinel Drone", ::ServerSpawnAI, 1, 1, 10, 1, ::ServerSpawnSentinelDrone);
+                        self addOptIncSlider("Spawn Mangler", ::ServerSpawnAI, 1, 1, 10, 1, ::ServerSpawnMangler);
                     }
 
                     if(map == "Zetsubou No Shima" || map == "Revelations")
                     {
                         if(map == "Zetsubou No Shima")
-                            self addOpt("Spawn Thrasher", ::ServerSpawnThrasher);
+                            self addOptIncSlider("Spawn Thrasher", ::ServerSpawnAI, 1, 1, 10, 1, ::ServerSpawnThrasher);
                         
-                        self addOpt("Spawn Spider", ::ServerSpawnSpider);
+                        self addOptIncSlider("Spawn Spider", ::ServerSpawnAI, 1, 1, 10, 1, ::ServerSpawnSpider);
                     }
 
                     if(map == "Revelations")
-                        self addOpt("Spawn Fury", ::ServerSpawnFury);
+                        self addOptIncSlider("Spawn Fury", ::ServerSpawnAI, 1, 1, 10, 1, ::ServerSpawnFury);
                     
                     if(map == "Kino Der Toten")
-                        self addOpt("Spawn Nova Zombie", ::ServerSpawnNovaZombie);
+                        self addOptIncSlider("Spawn Nova Zombie", ::ServerSpawnAI, 1, 1, 10, 1, ::ServerSpawnNovaZombie);
                 }
             break;
         
@@ -1030,7 +1030,7 @@ MenuOptionsPlayer(menu, player)
                 self addOpt("Perk Menu", ::newMenu, "Perk Menu " + player GetEntityNumber());
                 self addOpt("Gobblegum Menu", ::newMenu, "Gobblegum Menu " + player GetEntityNumber());
                 self addOptBool(player.ThirdPerson, "Third Person", ::ThirdPerson, player);
-                self addOptIncSlider("Movement Speed", ::SetMovementSpeed, 0, 1, 5, 1, player);
+                self addOptIncSlider("Movement Speed", ::SetMovementSpeed, 0, 1, 3, 0.1, player);
                 self addOptSlider("Clone", ::PlayerClone, "Clone;Dead", player);
                 self addOptBool(player.Invisibility, "Invisibility", ::Invisibility, player);
                 self addOptBool(player.SaveAndLoad, "Save & Load Position", ::SaveAndLoad, player);
@@ -1342,16 +1342,23 @@ MenuOptionsPlayer(menu, player)
                 }
             break;
         case "Equipment Bullets":
+            include_equipment = GetArrayKeys(level.zombie_include_equipment);
             equipment = ArrayCombine(level.zombie_lethal_grenade_list, level.zombie_tactical_grenade_list, 0, 1);
             keys = GetArrayKeys(equipment);
 
             self addMenu(menu, "Equipment");
 
-                if(isDefined(keys) && keys.size)
+                if(isDefined(keys) && keys.size || isDefined(include_equipment) && include_equipment.size)
                 {
                     foreach(index, weapon in GetArrayKeys(level.zombie_weapons))
-                        if(isInArray(equipment, weapon))
+                        if(isInArray(equipment, weapon) && !IsSubStr(weapon.name, "_upgraded"))
                             self addOpt(weapon.displayname, ::BulletProjectile, weapon, "Equipment", player);
+                    
+
+                    if(isDefined(include_equipment) && include_equipment.size)
+                        foreach(weapon in include_equipment)
+                            if(!IsSubStr(weapon.name, "_upgraded"))
+                                self addOpt(weapon.displayname, ::BulletProjectile, weapon, "Equipment", player);
                 }
                 else
                     self addOpt("No Equipment Found");
@@ -1405,6 +1412,7 @@ MenuOptionsPlayer(menu, player)
                 self addOptBool(player.LightProtector, "Light Protector", ::LightProtector, player);
                 self addOpt("Adventure Time", ::AdventureTime, player);
                 self addOpt("Earthquake", ::SendEarthquake, player);
+                self addOptBool(player.SpecialMovements, "Special Movements", ::SpecialMovements, player);
                 self addOptBool(player.SpecNade, "Spec-Nade", ::SpecNade, player);
                 self addOptBool(player.NukeNades, "Nuke Nades", ::NukeNades, player);
                 self addOptBool(player.ShootPowerUps, "Shoot Power-Ups", ::ShootPowerUps, player);
@@ -1539,6 +1547,7 @@ MenuOptionsPlayer(menu, player)
                 self addOptBool(player.BlackScreen, "Black Screen", ::BlackScreenPlayer, player);
                 self addOptBool(player.FakeLag, "Fake Lag", ::FakeLag, player);
                 self addOptBool(self.AttachToPlayer, "Attach Self To Player", ::AttachSelfToPlayer, player);
+                self addOptBool(player.DropCamera, "Drop Camera", ::PlayerDropCamera, player);
                 self addOpt("Fake Derank", ::FakeDerank, player);
                 self addOpt("Fake Damage", ::FakeDamagePlayer, player);
                 self addOpt("Crash Game", ::CrashPlayer, player);
@@ -2048,12 +2057,7 @@ DestroyOpts()
 RefreshMenu(menu, curs, force)
 {
     if(isDefined(menu) && !isDefined(curs) || !isDefined(menu) && isDefined(curs))
-    {
-        if(self isDeveloper())
-            return self iPrintlnBold("^1DEBUG: ^7RefreshMenu Called With Improper Parameters");
-        
         return;
-    }
     
     if(self hasMenu() && self isInMenu() && !isDefined(self.menu["DisableMenuControls"]))
     {

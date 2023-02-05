@@ -29,6 +29,16 @@ GetAISpawnLocation()
     }
 }
 
+ServerSpawnAI(amount, spawner)
+{
+	for(a = 0; a < amount; a++)
+	{
+		self thread [[ spawner ]]();
+		
+		wait 0.1;
+	}
+}
+
 
 
 //Zombies
