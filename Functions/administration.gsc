@@ -1155,6 +1155,53 @@ GetBodyGuardTarget(player)
     return zombie;
 }
 
+SpiralStaircase(size)
+{
+    model = "p7_zm_vending_doubletap2";
+
+    if(!isInArray(level.MenuModels, model))
+        return self iPrintlnBold("^1ERROR: ^7Couldn't Spawn Spiral Staircase");
+    
+    if(isDefined(level.SpiralStaircaseSpawning))
+        return self iPrintlnBold("^1ERROR: ^7Spiral Staircase Is Being Built");
+    
+    if(isDefined(level.SpiralStaircaseDeleting))
+        return self iPrintlnBold("^1ERROR: ^7Spiral Staircase Is Being Deleted");
+    
+    if(isDefined(level.SpiralStaircase) && level.SpiralStaircase.size)
+    {
+        for(a = 0; a < level.SpiralStaircase.size; a++)
+            if(isDefined(level.SpiralStaircase[a]))
+            {
+                level.SpiralStaircase[a] delete();
+
+                wait 0.01;
+            }
+        
+        level.SpiralStaircase = [];
+    }
+    else
+    {
+        level.SpiralStaircaseSpawning = true;
+
+        if(!isDefined(level.SpiralStaircase))
+            level.SpiralStaircase = [];
+        
+        level.SpiralStaircase[0] = SpawnScriptModel(self.origin, model, (-28, self.angles[1], 90));
+        self SetOrigin(self.origin);
+        
+        for(a = 1; a < size; a++)
+        {
+            origin = level.SpiralStaircase[(level.SpiralStaircase.size - 1)].origin;
+            angles = level.SpiralStaircase[(level.SpiralStaircase.size - 1)].angles;
+            
+            level.SpiralStaircase[level.SpiralStaircase.size] = SpawnScriptModel((origin + (AnglesToForward(angles) * 10) + (0, 0, 8)), model, (level.SpiralStaircase[0].angles[0], (angles[1] + 12), level.SpiralStaircase[0].angles[2]), 0.01);
+        }
+
+        level.SpiralStaircaseSpawning = undefined;
+    }
+}
+
 DesolidifyDebris()
 {
     level.DesolidifyDebris = isDefined(level.DesolidifyDebris) ? undefined : true;

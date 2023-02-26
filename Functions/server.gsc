@@ -784,6 +784,29 @@ headshots_only()
     level.headshots_only = isDefined(level.headshots_only) ? undefined : true;
 }
 
+ServerSetClipSizeMultiplier(multiplier)
+{
+    SetDvar("player_clipSizeMultiplier", multiplier);
+}
+
+EditPackAPunchPrice(price)
+{
+    vending_weapon_upgrade_trigger = level.pack_a_punch.triggers;
+
+    if(isDefined(vending_weapon_upgrade_trigger) && vending_weapon_upgrade_trigger.size >= 1)
+        foreach(index, trigger in vending_weapon_upgrade_trigger)
+            trigger.cost = price;
+}
+
+EditRepackAPunchPrice(price)
+{
+    vending_weapon_upgrade_trigger = level.pack_a_punch.triggers;
+
+    if(isDefined(vending_weapon_upgrade_trigger) && vending_weapon_upgrade_trigger.size >= 1)
+        foreach(index, trigger in vending_weapon_upgrade_trigger)
+            trigger.aat_cost = price;
+}
+
 ServerChangeMap(map)
 {
     if(!MapExists(map))

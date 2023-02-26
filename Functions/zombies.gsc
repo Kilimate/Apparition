@@ -1,3 +1,40 @@
+AIPrioritizePlayer(player)
+{
+    player.AIPrioritizePlayer = isDefined(player.AIPrioritizePlayer) ? undefined : true;
+
+    if(isDefined(player.AIPrioritizePlayer))
+    {
+        player endon("disconnect");
+
+        while(isDefined(player.AIPrioritizePlayer))
+        {
+            if(!isDefined(player.b_is_designated_target) || !player.b_is_designated_target)
+                player.b_is_designated_target = true;
+            
+            wait 0.1;
+        }
+    }
+    else
+        player.b_is_designated_target = false;
+}
+
+SetZombieHealth(type)
+{
+    switch(type)
+    {
+        case "Custom":
+            self thread NumberPad("Zombie Health", ::EditZombieHealth);
+            break;
+        
+        case "Reset":
+            level thread SetZombieHealth(GetZombieHealthFromRound(level.round_number));
+            break;
+        
+        default:
+            break;
+    }
+}
+
 EditZombieHealth(health)
 {
     level notify("EndZombieHealth");
@@ -198,11 +235,44 @@ ZombieGibBone(bone)
 
 SetZombieModel(model)
 {
+    level notify("EndZombieModel");
+    level endon("EndZombieModel");
+
+    
+    if(model != level.ZombieModel)
+    {
+        level.ZombieModel = model;
+
+        while(isDefined(level.ZombieModel))
+        {
+            zombies = GetAITeamArray(level.zombie_team);
+
+            for(a = 0; a < zombies.size; a++)
+                if(isDefined(zombies[a]) && IsAlive(zombies[a]) && zombies[a].model != level.ZombieModel)
+                {
+                    if(!isDefined(zombies[a].savedModel))
+                        zombies[a].savedModel = zombies[a].model;
+                    
+                    zombies[a] SetModel(level.ZombieModel);
+                }
+            
+            wait 0.1;
+        }
+    }
+    else
+        level DisableZombieModel();
+}
+
+DisableZombieModel()
+{
+    level notify("EndZombieModel");
+    
+    level.ZombieModel = undefined;
     zombies = GetAITeamArray(level.zombie_team);
 
     for(a = 0; a < zombies.size; a++)
-        if(isDefined(zombies[a]) && IsAlive(zombies[a]))
-            zombies[a] SetModel(model);
+        if(isDefined(zombies[a]) && IsAlive(zombies[a]) && isDefined(zombies[a].savedModel))
+            zombies[a] SetModel(zombies[a].savedModel);
 }
 
 DisableZombieSpawning()

@@ -157,15 +157,16 @@ init()
     level.player_out_of_playable_area_monitor_callback = ::player_out_of_playable_area_monitor;
 
     level.overrideplayerdamage = ::override_player_damage;
+
     level.saved_global_damage_func = level.global_damage_func;
-
     level.global_damage_func = ::override_zombie_damage;
+
     level.saved_global_damage_func_ads = level.global_damage_func_ads;
-
     level.global_damage_func_ads = ::override_zombie_damage_ads;
-    level.saved_callbackactorkilled = level.callbackactorkilled;
 
+    level.saved_callbackactorkilled = level.callbackactorkilled;
     level.callbackactorkilled = ::override_actor_killed;
+    
     level.custom_game_over_hud_elem = ::override_game_over_hud_elem; //This will only show the custom hud to players that are verified.
     level.player_score_override = ::override_player_points;
 }

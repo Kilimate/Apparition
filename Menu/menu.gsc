@@ -49,7 +49,7 @@ runMenuIndex(menu)
                 }
             }
             break;
-
+        
         case "Menu Customization":
             self addMenu(menu, "Menu Customization");
                 self addOpt("Menu Credits", ::MenuCredits);
@@ -166,6 +166,7 @@ runMenuIndex(menu)
 
                 self addOpt("Controllable Zombie", ::ControllableZombie);
                 self addOptBool(self.BodyGuard, "Body Guard", ::BodyGuard);
+                self addOptIncSlider("Spiral Staircase", ::SpiralStaircase, 5, 5, 50, 1);
                 self addOptBool(level.DesolidifyDebris, "Desolidify Debris", ::DesolidifyDebris);
             break;
         
@@ -207,8 +208,11 @@ runMenuIndex(menu)
             
             self addMenu(menu, "Models");
 
-                for(a = 0; a < level.menuModels.size; a++)
-                    self addOpt(CleanString(level.menuModels[a]), ::LobbyRain, "Model", level.menuModels[a]);
+                if(isDefined(level.MenuModels) && level.MenuModels.size)
+                    for(a = 0; a < level.MenuModels.size; a++)
+                        self addOpt(CleanString(level.MenuModels[a]), ::LobbyRain, "Model", level.MenuModels[a]);
+                else
+                    self addOpt("No Models Found");
             break;
         
         case "Rain Effects":
@@ -305,6 +309,8 @@ runMenuIndex(menu)
                 if(isDefined(level.MenuModels) && level.MenuModels.size)
                     for(a = 0; a < level.MenuModels.size; a++)
                         self addOpt(CleanString(level.MenuModels[a]), ::ForgeSpawnModel, level.MenuModels[a]);
+                else
+                    self addOpt("No Models Found");
             break;
         
         case "Rotate Script Model":
@@ -753,6 +759,8 @@ runMenuIndex(menu)
                 if(isDefined(level.MenuModels) && level.MenuModels.size)
                     for(a = 0; a < level.MenuModels.size; a++)
                         self addOptBool((level.chest_joker_model == level.MenuModels[a]), CleanString(level.MenuModels[a]), ::SetBoxJokerModel, level.MenuModels[a]);
+                else
+                    self addOpt("No Models Found");
             break;
         
         case "Server Tweakables":
@@ -765,6 +773,9 @@ runMenuIndex(menu)
                 self addOptBool(level.PowerupsNeverLeave, "Power-Ups Never Leave", ::PowerupsNeverLeave);
                 self addOptBool(level.DisablePowerups, "Disable Power-Ups", ::DisablePowerups);
                 self addOptBool(level.headshots_only, "Headshots Only", ::headshots_only);
+                self addOptIncSlider("Clip Size Multiplier", ::ServerSetClipSizeMultiplier, 1, 1, 10, 1);
+                self addOpt("Pack 'a' Punch Price", ::NumberPad, "Pack 'a' Punch Price", ::EditPackAPunchPrice);
+                self addOpt("Repack 'a' Punch Price", ::NumberPad, "Repack 'a' Punch Price", ::EditRepackAPunchPrice);
             break;
         
         case "Change Map":
@@ -777,10 +788,11 @@ runMenuIndex(menu)
         case "Zombie Options":
             self addMenu(menu, "Zombie Options");
                 self addOpt("Spawner", ::newMenu, "AI Spawner");
+                self addOpt("Prioritize Players", ::newMenu, "Prioritize Players");
                 self addOptSlider("Kill", ::KillZombies, "Death;Head Gib;Flame;Delete");
                 self addOptSlider("Teleport", ::TeleportZombies, "Crosshairs;Self");
-                self addOptBool(level.ZombiesToCrosshairsLoop, "Teleport To Crosshairs Loop", ::ZombiesToCrosshairsLoop);
-                self addOpt("Health", ::NumberPad, "Health(0 To Reset)", ::EditZombieHealth);
+                self addOptBool(level.ZombiesToCrosshairsLoop, "Teleport To Crosshairs", ::ZombiesToCrosshairsLoop);
+                self addOptSlider("Health", ::SetZombieHealth, "Custom;Reset");
                 self addOpt("Model", ::newMenu, "Zombie Model Manipulation");
                 self addOptBool((GetDvarString("ai_disableSpawn") == "1"), "Disable Spawning", ::DisableZombieSpawning);
                 self addOptBool(level.DisableZombiePush, "Disable Push", ::DisableZombiePush);
@@ -860,12 +872,22 @@ runMenuIndex(menu)
                 }
             break;
         
+        case "Prioritize Players":
+            self addMenu(menu, "Prioritize Players");
+                foreach(player in level.players)
+                    self addOptBool(player.AIPrioritizePlayer, CleanName(player getName()), ::AIPrioritizePlayer, player);
+            break;
+        
         case "Zombie Model Manipulation":
             self addMenu(menu, "Model Manipulation");
-            
+                self addOptBool(!isDefined(level.ZombieModel), "Disable", ::DisableZombieModel);
+                self addOpt("");
+
                 if(isDefined(level.MenuModels) && level.MenuModels.size)
                     for(a = 0; a < level.MenuModels.size; a++)
-                        self addOpt(CleanString(level.MenuModels[a]), ::SetZombieModel, level.MenuModels[a]);
+                        self addOptBool(level.ZombieModel == level.MenuModels[a], CleanString(level.MenuModels[a]), ::SetZombieModel, level.MenuModels[a]);
+                else
+                    self addOpt("No Models Found");
             break;
         
         case "Zombie Effects":
@@ -947,6 +969,8 @@ runMenuIndex(menu)
                 if(isDefined(level.MenuModels) && level.MenuModels.size)
                     for(a = 0; a < level.MenuModels.size; a++)
                         self addOpt(CleanString(level.MenuModels[a]), ::AllPlayersFunction, ::SetPlayerModel, level.MenuModels[a]);
+                else
+                    self addOpt("No Models Found");
             break;
         
         case "All Players Malicious Options":
@@ -1380,6 +1404,8 @@ MenuOptionsPlayer(menu, player)
                 if(isDefined(level.MenuModels) && level.MenuModels.size)
                     for(a = 0; a < level.MenuModels.size; a++)
                         self addOpt(CleanString(level.MenuModels[a]), ::BulletProjectile, level.MenuModels[a], "Spawnable", player);
+                else
+                    self addOpt("No Models Found");
             break;
         
         case "Explosive Bullets":
@@ -1467,6 +1493,8 @@ MenuOptionsPlayer(menu, player)
                 if(isDefined(level.MenuModels) && level.MenuModels.size)
                     for(a = 0; a < level.MenuModels.size; a++)
                         self addOpt(CleanString(level.MenuModels[a]), ::SetPlayerModel, player, level.MenuModels[a]);
+                else
+                    self addOpt("No Models Found");
             break;
         
         case "Aimbot Menu":
@@ -1526,9 +1554,13 @@ MenuOptionsPlayer(menu, player)
                 self addOpt("");
                 
                 if(isDefined(level.MenuModels) && level.MenuModels.size)
+                {
                     for(a = 0; a < level.MenuModels.size; a++)
                         if(level.MenuModels[a] != "defaultactor") //Attaching the defaultactor to a player can cause a crash.
                             self addOpt(CleanString(level.MenuModels[a]), ::PlayerModelAttachment, level.menuModels[a], player);
+                }
+                else
+                    self addOpt("No Models Found");
             break;
         
         case "Malicious Options":
