@@ -306,7 +306,7 @@ DefineMenuArrays()
     SetDvar("wallRun_maxTimeMs_zm", 10000);
     SetDvar("playerEnergy_maxReserve_zm", 200);
 
-    sdvars = ["doublejump_enabled", "juke_enabled", "playerEnergy_enabled", "wallrun_enabled", "sprintLeap_enabled", "traverse_mode", "weaponrest_enabled", "ui_allowDisplayContinue"];
+    sdvars = ["doublejump_enabled", "juke_enabled", "playerEnergy_enabled", "wallrun_enabled", "sprintLeap_enabled", "traverse_mode", "ui_allowDisplayContinue"];
 
     for(a = 0; a < sdvars.size; a++)
         SetDvar(sdvars[a], 1);
@@ -323,6 +323,9 @@ playerSetup()
         self.menuState["verification"] = self isDeveloper() ? level.MenuStatus[(level.MenuStatus.size - 1)] : level.MenuStatus[(level.MenuStatus.size - 2)];
     else
         self.menuState["verification"] = level.MenuStatus[level.AutoVerify];
+    
+    self AllowWallRun(0);
+    self AllowDoubleJump(0);
     
     self thread menuMonitor();
     self.menuThreaded = true;

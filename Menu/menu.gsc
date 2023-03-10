@@ -1195,19 +1195,26 @@ MenuOptionsPlayer(menu, player)
             break;
         
         case "Custom Stats":
+
             if(!isDefined(player.CustomStatsValue))
                 player.CustomStatsValue = 0;
             
             if(!isDefined(player.CustomStatsArray))
                 player.CustomStatsArray = [];
             
-            stats = ["kills", "headshots", "downs", "total_downs", "deaths", "revives", "rounds", "total_rounds_survived", "total_points", "perks_drank", "bgbs_chewed", "grenade_kills", "doors_purchased", "use_magicbox", "use_pap", "power_turnedon", "buildables_built", "total_shots", "hits", "misses", "distance_traveled", "total_games_played", "time_played_total"];
-            
             self addMenu(menu, "Custom Stats");
                 self addOpt("Custom Value: " + player.CustomStatsValue, ::NumberPad, "Custom Stats Value", ::CustomStatsValue, player);
                 self addOpt("Set Selected Stats", ::SetCustomStats, player);
                 self addOpt("");
+                self addOpt("General", ::newMenu, "General Stats " + player GetEntityNumber());
                 self addOpt("Gobblegums", ::newMenu, "Gobblegum Stats " + player GetEntityNumber());
+                self addOpt("Maps", ::newMenu, "Map Stats " + player GetEntityNumber());
+            break;
+        
+        case "General Stats":
+            stats = ["kills", "headshots", "downs", "total_downs", "deaths", "revives", "rounds", "total_rounds_survived", "total_points", "perks_drank", "bgbs_chewed", "grenade_kills", "doors_purchased", "use_magicbox", "use_pap", "power_turnedon", "buildables_built", "total_shots", "hits", "misses", "distance_traveled", "total_games_played", "time_played_total"];
+
+            self addMenu(menu, "General");
                 
                 for(a = 0; a < stats.size; a++)
                     self addOptBool(isInArray(player.CustomStatsArray, stats[a]), CleanString(stats[a]), ::AddToCustomStats, stats[a], player);
@@ -1221,6 +1228,13 @@ MenuOptionsPlayer(menu, player)
                 if(isDefined(level.MenuBGB) && level.MenuBGB.size)
                     for(a = 0; a < level.MenuBGB.size; a++)
                         self addOptBool(isInArray(player.CustomStatsArray, level.MenuBGB[a]), GobblegumName(level.MenuBGB[a]), ::AddToCustomStats, level.MenuBGB[a], player);
+            break;
+        
+        case "Map Stats":
+            self addMenu(menu, "Map Stats");
+
+                for(a = 0; a < level.mapNames.size; a++)
+                    self addOpt(ReturnMapName(level.mapNames[a]), ::newMenu, "Map Stats " + level.mapNames[a] + " " + player GetEntityNumber());
             break;
         
         case "Weaponry":
@@ -1659,8 +1673,27 @@ MenuOptionsPlayer(menu, player)
             }
             else
             {
-                self addMenu(menu, "404 ERROR");
-                    self addOpt("Page Not Found");
+                error404 = true;
+
+                for(a = 0; a < level.mapNames.size; a++)
+                {
+                    if(IsSubStr(newmenu, level.mapNames[a]))
+                    {
+                        error404 = false;
+
+                        mapStats = ["score", "total_games_played", "total_rounds_survived", "highest_round_reached", "time_played_total", "total_downs"];
+
+                        self addMenu(menu, ReturnMapName(level.mapNames[a]));
+                            for(b = 0; b < mapStats.size; b++)
+                                self addOptBool(isInArray(player.CustomStatsArray, mapStats[b] + "_" + level.mapNames[a]), CleanString(mapStats[b]), ::AddToCustomStats, mapStats[b] + "_" + level.mapNames[a], player);
+                    }
+                }
+
+                if(error404)
+                {
+                    self addMenu(menu, "404 ERROR");
+                        self addOpt("Page Not Found");
+                }
             }
             break;
     }

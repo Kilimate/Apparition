@@ -27,7 +27,8 @@ SetZombieHealth(type)
             break;
         
         case "Reset":
-            level thread SetZombieHealth(GetZombieHealthFromRound(level.round_number));
+            level notify("EndZombieHealth");
+            level thread EditZombieHealth();
             break;
         
         default:
@@ -40,16 +41,16 @@ EditZombieHealth(health)
     level notify("EndZombieHealth");
     level endon("EndZombieHealth");
     
-    if(health)
+    if(isDefined(health) && health)
     {
         while(1)
         {
-            level thread SetZombieHealth(health);
+            level SetZombieHealth1(health);
             wait 0.1;
         }
     }
     else
-        level thread SetZombieHealth(GetZombieHealthFromRound(level.round_number));
+        level SetZombieHealth1(GetZombieHealthFromRound(level.round_number));
 }
 
 GetZombieHealthFromRound(round_number)
@@ -73,18 +74,18 @@ GetZombieHealthFromRound(round_number)
     return zombie_health;
 }
 
-SetZombieHealth(health)
+SetZombieHealth1(health)
 {
     level.zombie_health = health;
     zombies = GetAITeamArray(level.zombie_team);
     
     for(a = 0; a < zombies.size; a++)
     {
-        if(isDefined(zombies[a]) && IsAlive(zombies[a]) && zombies[a].maxhealth != level.zombie_health)
-        {
-            zombies[a].maxhealth = level.zombie_health;
-            zombies[a].health = zombies[a].maxhealth;
-        }
+        if(!isDefined(zombies[a]) || !IsAlive(zombies[a]) || zombies[a].maxhealth == health)
+            continue;
+        
+        zombies[a].maxhealth = health;
+        zombies[a].health = zombies[a].maxhealth;
     }
 }
 

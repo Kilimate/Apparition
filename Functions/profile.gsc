@@ -78,17 +78,42 @@ AddToCustomStats(stat, player)
 SetCustomStats(player)
 {
     if(!isDefined(player.CustomStatsArray) || !player.CustomStatsArray.size)
-        return self iPrintlnBold("^1ERROR: ^7No Stats Enabled");
+        return self iPrintlnBold("^1ERROR: ^7No Stats Have Selected");
     
     for(a = 0; a < player.CustomStatsArray.size; a++)
     {
         if(isInArray(level.MenuBGB, player.CustomStatsArray[a]))
             player SetDStat("ItemStats", level.bgb[player.CustomStatsArray[a]].item_index, "stats", "used", "StatValue", player.CustomStatsValue);
+        else if(IsMapStat(player.CustomStatsArray[a], false))
+            player SetDStat("PlayerStatsByMap", IsMapStat(player.CustomStatsArray[a], true), "stats", RemoveMapFromStat(player.CustomStatsArray[a]), "StatValue", player.CustomStatsValue);
         else
             player SetDStat("PlayerStatsList", player.CustomStatsArray[a], "StatValue", player.CustomStatsValue);
     }
     
+    wait 0.1;
+
     UploadStats(player);
+}
+
+IsMapStat(stat, returnMap)
+{
+    for(a = 0; a < level.mapNames.size; a++)
+        if(IsSubStr(stat, level.mapNames[a]))
+            return returnMap ? level.mapNames[a] : true;
+    
+    return returnMap ? undefined : false;
+}
+
+RemoveMapFromStat(stat)
+{
+    if(!IsMapStat(stat, false))
+        return;
+    
+    mapStats = ["score", "total_games_played", "total_rounds_survived", "highest_round_reached", "time_played_total", "total_downs"];
+
+    for(a = 0; a < mapStats.size; a++)
+        if(IsSubStr(stat, mapStats[a]) || mapStats[a] == stat)
+            return mapStats[a];
 }
 
 IsAllBGBStatsEnabled()
