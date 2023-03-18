@@ -13,7 +13,7 @@ Aimbot(player)
         
         if(isDefined(enemy))
         {
-            origin = enemy GetTagOrigin(player.AimBoneTag);
+            origin = (player.AimBoneTag == "Best") ? enemy GetTagOrigin(player ScanForBestTag(enemy)) : enemy GetTagOrigin(player.AimBoneTag);
 
             if(!isDefined(origin)) //Needed for AI that don't have the targeted bone tag(i.e. Spiders)
                 origin = enemy GetTagOrigin("tag_body");
@@ -41,7 +41,7 @@ GetClosestTarget()
 
     for(a = 0; a < zombies.size; a++)
     {
-        if(!isDefined(zombies[a]) || !IsAlive(zombies[a]) || isDefined(self.VisibilityCheck) && zombies[a] DamageConeTrace(self GetEye(), self) < 0.1)
+        if(!isDefined(zombies[a]) || !IsAlive(zombies[a]) || isDefined(self.VisibilityCheck) && zombies[a] DamageConeTrace(self GetEye(), self) < 0.1 || isDefined(self.PlayableAreaCheck) && !zm_behavior::inplayablearea(zombies[a]))
             continue;
         
         if(!isDefined(enemy))
@@ -57,6 +57,28 @@ GetClosestTarget()
     }
 
     return enemy;
+}
+
+ScanForBestTag(target)
+{
+    if(!isDefined(target) || !IsAlive(target))
+        return;
+    
+    tags = ["j_ankle_ri", "j_ankle_le", "pelvis", "j_mainroot", "j_spinelower", "j_spine4", "j_neck", "j_head"];
+    scanValue = 0;
+
+    for(a = 0; a < tags.size; a++)
+    {
+        currentScan = target DamageConeTrace(self GetEye(), self);
+
+        if(currentScan >= scanValue)
+        {
+            scanValue = currentScan;
+            tag = tags[a];
+        }
+    }
+
+    return tag;
 }
 
 isFiring1()
@@ -96,6 +118,9 @@ AimbotOptions(a, player)
             break;
         
         case 5:
+            player.PlayableAreaCheck = isDefined(player.PlayableAreaCheck) ? undefined : true;
+        
+        case 6:
             player.AutoFire = isDefined(player.AutoFire) ? undefined : true;
             break;
         

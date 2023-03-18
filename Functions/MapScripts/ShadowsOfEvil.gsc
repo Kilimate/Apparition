@@ -217,6 +217,19 @@ SOESmashablesRemaining()
 	return false;
 }
 
+SOEPowerSwitchesRemaining()
+{
+	foreach(ooze in GetEntArray("ooze_only", "script_noteworthy"))
+	{
+		if(IsSubStr(ooze.targetname, "keeper_sword") || IsSubStr(ooze.targetname, "ee_district_rail"))
+			continue;
+		
+		return true;
+	}
+
+	return false;
+}
+
 TriggerSOEESwitch(eswitch)
 {
 	target = GetEnt(eswitch.target, "targetname");

@@ -135,9 +135,9 @@ AC130NextWeapon(current)
     switch(current)
     {
         case GetWeapon("minigun"):
-            return GetWeapon("pistol_standardlh_upgraded");
+            return zm_weapons::get_upgrade_weapon(level.start_weapon);
         
-        case GetWeapon("pistol_standardlh_upgraded"):
+        case zm_weapons::get_upgrade_weapon(level.start_weapon):
             return GetWeapon("hunter_rocket_turret_player");
         
         case GetWeapon("hunter_rocket_turret_player"):
@@ -155,7 +155,7 @@ AC130FireRate(ammo)
         case GetWeapon("minigun"):
             return 0.01;
         
-        case GetWeapon("pistol_standardlh_upgraded"):
+        case zm_weapons::get_upgrade_weapon(level.start_weapon):
             return 0.25;
         
         case GetWeapon("hunter_rocket_turret_player"):
@@ -215,7 +215,7 @@ RefreshAC130HUD(ammo)
             AC130HudValues = ["0,50,2,80", "40,0,60,2", "-40,0,60,2", "-180,151,2,50", "-155,175,50,2", "180,151,2,50", "155,175,50,2", "180,-151,2,50", "155,-175,50,2", "-180,-151,2,50", "-155,-175,50,2"];
             break;
         
-        case GetWeapon("pistol_standardlh_upgraded"):
+        case zm_weapons::get_upgrade_weapon(level.start_weapon):
             text = "40mm";
             AC130HudValues = ["0,80,2,120", "0,-80,2,120", "0,-46,10,1", "0,-92,10,1", "0,-140,14,1", "0,46,10,1", "0,92,10,1", "0,140,14,1", "85,0,130,2", "-85,0,130,2", "37,0,1,10", "75,0,1,10", "112,0,1,10", "150,0,1,14", "-37,0,1,10", "-75,0,1,10", "-112,0,1,10", "-150,0,1,14"];
             break;
@@ -1038,7 +1038,7 @@ ZombieAttack()
     
     v_angles = self.angles;
 
-    if(isdefined(self.attacking_point))
+    if(isDefined(self.attacking_point))
     {
         v_angles = (self.attacking_point.v_center_pillar - self.origin);
         v_angles = VectorToAngles((v_angles[0], v_angles[1], 0));

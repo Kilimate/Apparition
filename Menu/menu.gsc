@@ -161,7 +161,7 @@ runMenuIndex(menu)
                 self addOpt("Artillery Strike", ::ArtilleryStrike);
                 self addOptBool(level.TornadoSpawned, "Tornado", ::Tornado);
 
-                if(ReturnMapName(level.script) != "Moon")
+                if(ReturnMapName(level.script) != "Moon" && ReturnMapName(level.script) != "Origins")
                     self addOptBool(level.MoonDoors, "Moon Doors", ::MoonDoors);
 
                 self addOpt("Controllable Zombie", ::ControllableZombie);
@@ -440,8 +440,8 @@ runMenuIndex(menu)
         case "Origins Challenges":
             self addMenu(menu, "Challenges");
 
-                foreach(challenge in level._challenges.a_stats)
-                    self addOptBool(get_stat(challenge.str_name, self).b_medal_awarded, challenge.str_hint, ::CompleteOriginChallenge, challenge.str_name);
+                foreach(player in level.players)
+                    self addOpt(CleanName(player getName()), ::newMenu, "Origins Challenges Player " + player GetEntityNumber());
             break;
         
         case "Origins Puzzles":
@@ -451,7 +451,7 @@ runMenuIndex(menu)
                 self addOpt("Fire", ::newMenu, "Fire Puzzles");
                 self addOpt("Lightning", ::newMenu, "Lightning Puzzles");
                 self addOpt("");
-                self addOptSlider("115 Rings", ::Align115Rings, "Ice;Lightning;Fire;Wind");
+                self addOptSlider("115 Rings(Buggy)", ::Align115Rings, "Ice;Lightning;Fire;Wind");
             break;
         
         case "Ice Puzzles":
@@ -577,7 +577,7 @@ runMenuIndex(menu)
         case "SOE Power Switches":
             self addMenu(menu, "Power Switches");
 
-                if(GetEntArray("ooze_only", "script_noteworthy").size)
+                if(SOEPowerSwitchesRemaining())
                 {
                     foreach(ooze in GetEntArray("ooze_only", "script_noteworthy"))
                     {
@@ -1548,16 +1548,17 @@ MenuOptionsPlayer(menu, player)
         
         case "Aimbot Menu":
             if(!isDefined(player.AimBoneTag))
-                player.AimBoneTag = "j_head";
+                player.AimBoneTag = "Best";
             
             self addMenu(menu, "Aimbot Menu");
                 self addOptBool(player.Aimbot, "Aimbot", ::Aimbot, player);
-                self addOptSlider("Bone Tag", ::AimBoneTag, level.boneTags, player);
+                self addOptSlider("Bone Tag", ::AimBoneTag, "Best;" + level.boneTags, player);
                 self addOptBool(player.AimingRequired, "Aiming Required", ::AimbotOptions, 1, player);
                 self addOptBool(player.AimSnap, "Aim Snap To Zombie", ::AimbotOptions, 2, player);
                 self addOptBool(player.ShootThruWalls, "Shoot Through Walls", ::AimbotOptions, 3, player);
                 self addOptBool(player.VisibilityCheck, "Visibility Check", ::AimbotOptions, 4, player);
-                self addOptBool(player.AutoFire, "Auto-Fire", ::AimbotOptions, 5, player);
+                self addOptBool(player.PlayableAreaCheck, "Playable Area Check", ::AimbotOptions, 5, player);
+                self addOptBool(player.AutoFire, "Auto-Fire", ::AimbotOptions, 6, player);
             break;
         
         case "Options":
@@ -1655,6 +1656,13 @@ MenuOptionsPlayer(menu, player)
                 }
                 else
                     self addOpt("No Challenges Found");
+            break;
+        
+        case "Origins Challenges Player":
+            self addMenu(menu, "Challenges");
+
+                foreach(challenge in level._challenges.a_stats)
+                    self addOptBool(get_stat(challenge.str_name, player).b_medal_awarded, challenge.str_hint, ::CompleteOriginChallenge, challenge.str_name, player);
             break;
         
         default:
@@ -2013,13 +2021,13 @@ openMenu1(menu)
     
     hud = ["banners", "title", "optionCount", "scroller", "MenuName", "NativeBar"];
 
-    hudFadeInTime = 0.5;
+    hudFadeInTime = 0.25;
 
     for(a = 0; a < hud.size; a++)
         if(isDefined(self.menu["ui"][hud[a]]))
             self.menu["ui"][hud[a]] thread hudFade(1, hudFadeInTime);
     
-    self.menu["ui"]["background"] thread hudFade(isDefined(self.menu["NativeDesign"]) ? 0.45 : 0.85, hudFadeInTime);
+    self.menu["ui"]["background"] thread hudFade(isDefined(self.menu["NativeDesign"]) ? 0.45 : 0.8, hudFadeInTime);
     
     self.menu["currentMenu"] = menu;
     self drawText();

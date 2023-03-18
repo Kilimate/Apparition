@@ -1,5 +1,8 @@
 
 /*
+	TO DO:
+		- Force Aligning 115 Rings Is Buggy
+	
 	UPGRADE STAFFS:
 
 	[X] = Can Be Completed With Apparition
@@ -395,9 +398,9 @@ MudSlowdown()
     level.a_e_slow_areas = isDefined(level.a_e_slow_areas) ? undefined : GetEntArray("player_slow_area", "targetname");
 }
 
-CompleteOriginChallenge(challenge)
+CompleteOriginChallenge(challenge, player)
 {
-	stat = get_stat(challenge, self);
+	stat = get_stat(challenge, player);
 
 	if(stat.b_medal_awarded)
 		return;
@@ -405,7 +408,7 @@ CompleteOriginChallenge(challenge)
 	if(stat.n_value < stat.s_parent.n_goal)
 	{
 		diff = (stat.s_parent.n_goal - stat.n_value);
-		self increment_stat(challenge, diff);
+		player increment_stat(challenge, diff);
 	}
 }
 
@@ -733,10 +736,10 @@ is_point_in_chamber(v_origin)
 	if(!isDefined(level.s_chamber_center))
 	{
 		level.s_chamber_center = struct::get("chamber_center", "targetname");
-		level.s_chamber_center.radius_sq = level.s_chamber_center.script_float * level.s_chamber_center.script_float;
+		level.s_chamber_center.radius_sq = (level.s_chamber_center.script_float * level.s_chamber_center.script_float);
 	}
 
-	return Distance2DSquared(level.s_chamber_center.origin, v_origin) < level.s_chamber_center.radius_sq;
+	return (Distance2DSquared(level.s_chamber_center.origin, v_origin) < level.s_chamber_center.radius_sq);
 }
 
 CompleteFireTorches()
@@ -887,24 +890,24 @@ Align115Rings(type)
 
 	foreach(ring in rings)
 	{
-		if(ring.position == num - 1)
+		if(ring.position == (num - 1) || !isDefined(ring.target))
 			continue;
 		
-		ring.position = num - 1;
+		ring.position = (num - 1);
 		new_angles = (ring.angles[0], ring.position * 90, ring.angles[2]);
 
 		ring RotateTo(new_angles, 1, 0, 0);
 		ring PlaySound("zmb_crypt_disc_turn");
 
-		wait 0.75;
-		
-		ring.n_bryce_cake = num - 1;
+		wait 1;
 
+		ring.n_bryce_cake = (num - 1);
+
+		if(isDefined(ring.var_b1c02d8a))
+			ring.var_b1c02d8a clientfield::set("bryce_cake", ring.n_bryce_cake);	
+		
 		ring PlaySound("zmb_crypt_disc_stop");
 		rumble_nearby_players(ring.origin, 1000, 2);
-
-		if(isdefined(ring.var_b1c02d8a))
-			ring.var_b1c02d8a clientfield::set("bryce_cake", ring.n_bryce_cake);
 	}
 
 	level flag::clear("disc_rotation_active");
@@ -912,9 +915,10 @@ Align115Rings(type)
 
 rumble_nearby_players(v_center, n_range, n_rumble_enum)
 {
-	n_range_sq = n_range * n_range;
+	n_range_sq = (n_range * n_range);
 	a_players = GetPlayers();
 	a_rumbled_players = [];
+
 	foreach(var_19408b7d, e_player in a_players)
 	{
 		if(DistanceSquared(v_center, e_player.origin) < n_range_sq)
