@@ -1,11 +1,13 @@
 /*
     Menu: Apparition
     Developer: CF4_99
-    Version: 1.0.2
+    Version: 1.0.3
     Project Start Date: 6/10/21
     Initial Release Date: 1/29/23
     
     Menu Source & Current Update: https://github.com/CF4x99/Apparition
+    Make sure you check my github link for updates. This menu is updated often.
+
     Discord: CF4_99#9999
     YouTube: https://www.youtube.com/c/CF499
     https://discord.gg/MXT
@@ -211,11 +213,14 @@ DefineOnce()
     level.DefineOnce = true;
     
     level.menuName = "Apparition";
-    level.menuVersion = "1.0.2";
+    level.menuVersion = "1.0.3";
+
     level.MenuStatus = ["None", "Verified", "VIP", "Co-Host", "Admin", "Host", "Developer"];
+    level.AutoVerify = 0;
+
     level.colorNames = ["Light Blue", "Raspberry", "Skyblue", "Pink", "Green", "Brown", "Blue", "Red", "Orange", "Purple", "Cyan", "Yellow", "Black", "White"];
     level.colors = [0, 110, 255, 135, 38, 87, 135, 206, 250, 255, 110, 255, 0, 255, 0, 101, 67, 33, 0, 0, 255, 255, 0, 0, 255, 128, 0, 100, 0, 255, 0, 255, 255, 255, 255, 0, 0, 0, 0, 255, 255, 255];
-    level.AutoVerify = 0;
+    
 }
 
 DefineMenuArrays()
@@ -324,6 +329,9 @@ playerSetup()
     else
         self.menuState["verification"] = level.MenuStatus[level.AutoVerify];
     
+    if(self hasMenu())
+        self thread ApparitionWelcomeMessage();
+    
     self AllowWallRun(0);
     self AllowDoubleJump(0);
     
@@ -351,4 +359,9 @@ defineVariables()
     
     //Menu Design Variables
     self thread LoadMenuVars();
+}
+
+ApparitionWelcomeMessage()
+{
+    //You can add a welcome message that will show for players when they're given the menu.
 }

@@ -7,6 +7,7 @@ LiquidsLoop(player)
     while(isDefined(player.LiquidsLoop))
     {
         player ReportLootReward("3", 200);
+
         wait 0.1;
     }
 }

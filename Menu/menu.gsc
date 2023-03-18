@@ -395,6 +395,7 @@ runMenuIndex(menu)
                 self addOptBool(isDefined(level.a_e_slow_areas), "Mud Slowdown", ::MudSlowdown);
                 self addOpt("Soul Boxes", ::newMenu, "Soul Boxes");
                 self addOpt("Challenges", ::newMenu, "Origins Challenges");
+                self addOpt("Puzzles", ::newMenu, "Origins Puzzles");
             break;
         
         case "Origins Generators":
@@ -441,6 +442,40 @@ runMenuIndex(menu)
 
                 foreach(challenge in level._challenges.a_stats)
                     self addOptBool(get_stat(challenge.str_name, self).b_medal_awarded, challenge.str_hint, ::CompleteOriginChallenge, challenge.str_name);
+            break;
+        
+        case "Origins Puzzles":
+            self addMenu(menu, "Puzzles");
+                self addOpt("Ice", ::newMenu, "Ice Puzzles");
+                self addOpt("Wind", ::newMenu, "Wind Puzzles");
+                self addOpt("Fire", ::newMenu, "Fire Puzzles");
+                self addOpt("Lightning", ::newMenu, "Lightning Puzzles");
+                self addOpt("");
+                self addOptSlider("115 Rings", ::Align115Rings, "Ice;Lightning;Fire;Wind");
+            break;
+        
+        case "Ice Puzzles":
+            self addMenu(menu, "Ice");
+                self addOptBool(level flag::get("ice_puzzle_1_complete"), "Tiles", ::CompleteIceTiles);
+                self addOptBool(level flag::get("ice_puzzle_2_complete"), "Tombstones", ::CompleteIceTombstones);
+            break;
+        
+        case "Wind Puzzles":
+            self addMenu(menu, "Wind");
+                self addOptBool(level flag::get("air_puzzle_1_complete"), "Rings", ::CompleteWindRings);
+                self addOptBool(level flag::get("air_puzzle_2_complete"), "Smoke", ::CompleteWindSmoke);
+            break;
+        
+        case "Fire Puzzles":
+            self addMenu(menu, "Fire");
+                self addOptBool(level flag::get("fire_puzzle_1_complete"), "Fill Cauldrons", ::ComepleteFireCauldrons);
+                self addOptBool(level flag::get("fire_puzzle_2_complete"), "Light Torches", ::CompleteFireTorches);
+            break;
+        
+        case "Lightning Puzzles":
+            self addMenu(menu, "Lightning");
+                self addOptBool(level flag::get("electric_puzzle_1_complete"), "Song", ::CompleteLightningSong);
+                self addOptBool(level flag::get("electric_puzzle_2_complete"), "Turn Dials", ::CompleteLightningDials);
             break;
         
         case "Gorod Krovi Scripts":
@@ -1653,7 +1688,7 @@ MenuOptionsPlayer(menu, player)
                 {
                     if(newmenu == "Specials")
                     {
-                        if(weapon.isgrenadeweapon || weapon.name == "knife" || IsSubStr(weapon.name, "upgraded") || weapon.name == "none")
+                        if(weapon.isgrenadeweapon || weapon.name == "knife" || weapon.name == "none")
                             continue;
                         
                         string = weapon.name;

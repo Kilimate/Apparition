@@ -1157,7 +1157,11 @@ GetBodyGuardTarget(player)
 
 SpiralStaircase(size)
 {
-    model = "p7_zm_vending_doubletap2";
+    for(a = 0; a < level.MenuModels.size; a++)
+        if(IsSubStr(level.MenuModels[a], "vending_doubletap") || IsSubStr(level.MenuModels[a], "vending_sleight"))
+            model = level.MenuModels[a];
+    
+    self iPrintlnBold(level.MenuModels[a]);
 
     if(!isInArray(level.MenuModels, model))
         return self iPrintlnBold("^1ERROR: ^7Couldn't Spawn Spiral Staircase");

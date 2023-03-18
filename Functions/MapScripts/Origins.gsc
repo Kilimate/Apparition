@@ -2,25 +2,27 @@
 /*
 	UPGRADE STAFFS:
 
+	[X] = Can Be Completed With Apparition
+
 		- ICE ~ https://www.kronorium.com/img/ice_staff.png
-			- Complete Ice Puzzle(Crazy Place)
-			- Destroy 3 Tombstones
-			- Align 115 Rings
+			[X] Complete Ice Puzzle(Crazy Place)
+			[X] Destroy 3 Tombstones With Ice Staff
+			[X] Align 115 Rings
 			- Charge Staff With Souls In Crazy Place
 		
 		- WIND ~ https://www.kronorium.com/img/wind_staff.png
-			- Complete Wind Puzzle(Crazy Place)
-			- Shoot 3 Smoking
-			- Align 115 Rings
+			[X] Complete Wind Puzzle(Crazy Place)
+			[X] Shoot 3 Smoking Stones
+			[X] Align 115 Rings
 			- Charge Staff With Souls In Crazy Place
 		
 		- LIGHTNING ~ https://www.kronorium.com/img/lightning_staff.png
-			- Complete Lightning Puzzle(Crazy Place)
+			[X] Complete Lightning Puzzle(Crazy Place)
 				- 1, 3, 6
 				- 3, 5, 7
 				- 2, 4, 6
 			
-			- Turn Dials Around Map
+			[X] Turn Dials Around Map
 				- Tank Station ~ Down
 				- Spawn ~ Left
 				- Gen. 4 ~ Up
@@ -29,13 +31,13 @@
 				- Gen. 5 ~ Down
 				- Mound Wall ~ Up
 			
-			- Align 115 Rings
+			[X] Align 115 Rings
 			- Charge Staff With Souls In Crazy Place
 		
 		- FIRE ~ https://www.kronorium.com/img/fire_staff.png
-			- Fill Cauldrons(Crazy Place)
-			- Light Torches
-			- Align 115 Rings
+			[X] Fill Cauldrons(Crazy Place)
+			[X] Light Torches
+			[X] Align 115 Rings
 			- Charge Staff With Souls In Crazy Place
 */
 
@@ -55,7 +57,7 @@ CompleteSoulbox(box)
 		wait 0.01;
 	}
 
-	self RefreshMenu(menu, curs);
+	self RefreshMenu(menu, curs, true);
 }
 
 OriginsSetWeather(weather)
@@ -500,4 +502,430 @@ check_stat_complete(s_stat)
 function_fbbc8608(str_hint, var_7ca2c2ae)
 {
 	self luinotifyevent(&"trial_complete", 3, &"ZM_TOMB_CHALLENGE_COMPLETED", str_hint, var_7ca2c2ae);
+}
+
+CompleteIceTiles()
+{
+	if(level flag::get("ice_puzzle_1_complete"))
+		return self iPrintlnBold("^1ERROR: ^7This Step Has Already Been Completed");
+	
+	if(isDefined(level.IceTilesInit))
+		return self iPrintlnBold("^1ERROR: ^7This Step Is Currently Being Completed");
+	
+	level.IceTilesInit = true;
+	
+	curs = self getCursor();
+    menu = self getCurrent();
+	ice_gem = GetEnt("ice_chamber_gem", "targetname");
+
+	while(!level flag::get("ice_puzzle_1_complete"))
+	{
+		if(isDefined(level.unsolved_tiles) && level.unsolved_tiles.size)
+		{
+			if(!isDefined(ice_gem))
+				break;
+			
+			foreach(tile in level.unsolved_tiles)
+			{
+				if(!isDefined(tile) || ice_gem.value != tile.value || !tile.showing_tile_side)
+					continue;
+				
+				tile notify("damage", 1, self, (0, 0, 0), tile.origin, undefined, undefined, undefined, undefined, GetWeapon("staff_water"));
+			}
+		}
+
+		wait 0.01;
+	}
+
+	wait 0.1;
+
+	self RefreshMenu(menu, curs);
+}
+
+CompleteIceTombstones()
+{
+	if(!level flag::get("ice_puzzle_1_complete"))
+		return self iPrintlnBold("^1ERROR: ^7Tiles Must Be Completed Before Using This Option");
+	
+	if(level flag::get("ice_puzzle_2_complete"))
+		return self iPrintlnBold("^1ERROR: ^7This Step Has Already Been Completed");
+	
+	if(isDefined(level.IceTombstones))
+		return self iPrintlnBold("^1ERROR: ^7This Step Is Currently Being Completed");
+	
+	level.IceTombstones = true;
+	
+	curs = self getCursor();
+    menu = self getCurrent();
+	tombstones = struct::get_array("puzzle_stone_water", "targetname");
+
+	while(!level flag::get("ice_puzzle_2_complete"))
+	{
+		if(isDefined(tombstones) && tombstones.size)
+		{
+			foreach(tombstone in tombstones)
+			{
+				if(!isDefined(tombstone) || !isDefined(tombstone.e_model))
+					continue;
+				
+				if(tombstone.e_model.model != "p7_zm_ori_note_rock_01_anim")
+				{
+					tombstone.e_model notify("damage", 1, self, (0, 0, 0), tombstone.e_model.origin, undefined, undefined, undefined, undefined, GetWeapon("staff_water"));
+
+					wait 0.5;
+				}
+
+				tombstone.e_model notify("damage", 1, self, (0, 0, 0), tombstone.e_model.origin, "BULLET", undefined, undefined, undefined, level.start_weapon);
+			}
+		}
+
+		wait 0.01;
+	}
+
+	wait 0.1;
+
+	self RefreshMenu(menu, curs);
+}
+
+CompleteWindRings()
+{
+	if(level flag::get("air_puzzle_1_complete"))
+		return self iPrintlnBold("^1ERROR: ^7This Step Has Already Been Completed");
+	
+	if(isDefined(level.WindRings))
+		return self iPrintlnBold("^1ERROR: ^7This Step Is Currently Being Completed");
+	
+	curs = self getCursor();
+    menu = self getCurrent();
+	level.WindRings = true;
+
+	if(!isDefined(level.a_ceiling_rings))
+		level.a_ceiling_rings = GetEntArray("ceiling_ring", "script_noteworthy");
+	
+	while(!level flag::get("air_puzzle_1_complete"))
+	{
+		if(isDefined(level.a_ceiling_rings) && level.a_ceiling_rings.size)
+		{
+			foreach(ring in level.a_ceiling_rings)
+			{
+				while(ring.position != ring.script_int)
+				{
+					if(IsSubStr(ring.targetname, "01"))
+						point = ring.origin + (120, 0, 0);
+					else if(IsSubStr(ring.targetname, "02"))
+						point = ring.origin + (180, 0, 0);
+					else if(IsSubStr(ring.targetname, "03"))
+						point = ring.origin + (240, 0, 0);
+					else if(IsSubStr(ring.targetname, "04"))
+						point = ring.origin + (300, 0, 0);
+
+					ring notify("damage", 1, self, (0, 0, 0), point, undefined, undefined, undefined, undefined, GetWeapon("staff_air"));
+
+					wait 1;
+				}
+
+				wait 0.1;
+			}
+		}
+
+		wait 0.01;
+	}
+
+	wait 0.1;
+
+	self RefreshMenu(menu, curs);
+}
+
+CompleteWindSmoke()
+{
+	if(!level flag::get("air_puzzle_1_complete"))
+		return self iPrintlnBold("^1ERROR: ^7Rings Must Be Completed Before Using This Option");
+	
+	if(level flag::get("air_puzzle_2_complete"))
+		return self iPrintlnBold("^1ERROR: ^7This Step Has Already Been Completed");
+	
+	if(isDefined(level.WindSmoke))
+		return self iPrintlnBold("^1ERROR: ^7This Step Is Currently Being Completed");
+	
+	level.WindSmoke = true;
+
+	curs = self getCursor();
+    menu = self getCurrent();
+	smokes = struct::get_array("puzzle_smoke_origin", "targetname");
+	s_dest = struct::get("puzzle_smoke_dest", "targetname");
+
+	foreach(smoke in smokes)
+	{
+		if(!isDefined(smoke) || !isDefined(smoke.detector_brush))
+			continue;
+		
+		v_to_dest = VectorNormalize(s_dest.origin - smoke.origin);
+		smoke.detector_brush notify("damage", 1, self, v_to_dest, undefined, undefined, undefined, undefined, undefined, GetWeapon("staff_air"));
+	}
+
+	while(!level flag::get("air_puzzle_2_complete"))
+		wait 0.1;
+	
+	self RefreshMenu(menu, curs);
+}
+
+ComepleteFireCauldrons()
+{
+	if(level flag::get("fire_puzzle_1_complete"))
+		return self iPrintlnBold("^1ERROR: ^7This Step Has Already Been Completed");
+
+	if(!is_chamber_occupied())
+		return self iPrintlnBold("^1ERROR: ^7A Player Must Be In The Crazy Place To Complete This Step");
+	
+	if(isDefined(level.FireCauldrons))
+		return self iPrintlnBold("^1ERROR: ^7This Step Is Currently Being Completed");
+	
+	level.FireCauldrons = true;
+	curs = self getCursor();
+    menu = self getCurrent();
+	
+	if(!isDefined(level.sacrifice_volumes))
+		level.sacrifice_volumes = GetEntArray("fire_sacrifice_volume", "targetname");
+
+	if(isDefined(level.sacrifice_volumes) && level.sacrifice_volumes.size)
+	{
+		foreach(vols in level.sacrifice_volumes)
+		{
+			if(vols.b_gods_pleased || vols.num_sacrifices_received >= 32)
+				continue;
+			
+			self notify("projectile_impact", GetWeapon("staff_fire"), vols.origin, 100, GetWeapon("staff_fire"));
+
+			for(a = 0; a < 33; a++)
+			{
+				level notify("vo_try_puzzle_fire1", self);
+				vols.num_sacrifices_received++;
+				vols.pct_sacrifices_received = (vols.num_sacrifices_received / 32);
+
+				wait 0.1;
+			}
+
+			vols.b_gods_pleased = 1;
+
+			wait 2;
+		}
+	}
+
+	while(!level flag::get("fire_puzzle_1_complete"))
+		wait 0.1;
+	
+	self RefreshMenu(menu, curs);
+}
+
+is_chamber_occupied()
+{
+	a_players = GetPlayers();
+
+	foreach(var_e3bb182, e_player in a_players)
+		if(is_point_in_chamber(e_player.origin))
+			return 1;
+	
+	return 0;
+}
+
+is_point_in_chamber(v_origin)
+{
+	if(!isDefined(level.s_chamber_center))
+	{
+		level.s_chamber_center = struct::get("chamber_center", "targetname");
+		level.s_chamber_center.radius_sq = level.s_chamber_center.script_float * level.s_chamber_center.script_float;
+	}
+
+	return Distance2DSquared(level.s_chamber_center.origin, v_origin) < level.s_chamber_center.radius_sq;
+}
+
+CompleteFireTorches()
+{
+	if(!level flag::get("fire_puzzle_1_complete"))
+		return self iPrintlnBold("^1ERROR: ^7The Cauldrons Must Be Filled Before Using This Option");
+	
+	if(level flag::get("fire_puzzle_2_complete"))
+		return self iPrintlnBold("^1ERROR: ^7This Step Has Already Been Completed");
+	
+	if(isDefined(level.FireTorches))
+		return self iPrintlnBold("^1ERROR: ^7This Step Is Currently Being Completed");
+	
+	level.FireTorches = true;
+	curs = self getCursor();
+    menu = self getCurrent();
+	
+	torches = GetEntArray("fire_torch_ternary", "script_noteworthy");
+
+	if(isDefined(torches) && torches.size)
+	{
+		foreach(torch in torches)
+		{
+			target = struct::get(torch.target, "targetname");
+
+			if(!isDefined(target) || !target.b_correct_torch)
+				continue;
+			
+			self notify("projectile_impact", GetWeapon("staff_fire"), target.origin, 100, GetWeapon("staff_fire"));
+
+			wait 0.5;
+		}
+	}
+	else
+		iPrintlnBold("torches undefined");
+
+	while(!level flag::get("fire_puzzle_2_complete"))
+		wait 0.1;
+	
+	self RefreshMenu(menu, curs);
+}
+
+CompleteLightningSong()
+{
+	if(level flag::get("electric_puzzle_1_complete"))
+		return self iPrintlnBold("^1ERROR: ^7This Step Has Already Been Completed");
+
+	if(!is_chamber_occupied())
+	{
+		self SetOrigin(struct::get_array("piano_key", "script_noteworthy")[0].origin);
+		return self iPrintlnBold("^1ERROR: ^7A Player Must Be In The Crazy Place To Complete This Step");
+	}
+	
+	if(isDefined(level.LightningSong))
+		return self iPrintlnBold("^1ERROR: ^7This Step Is Currently Being Completed");
+	
+	level.LightningSong = true;
+	curs = self getCursor();
+    menu = self getCurrent();
+
+	a_piano_keys = struct::get_array("piano_key", "script_noteworthy");
+	order = [11, 7, 3, 7, 4, 2, 9, 5, 3]; //The order is always the same
+
+	for(a = 0; a < 3; a++)
+	{
+		for(b = (0 + (3 * a)); b < ((0 + (3 * a)) + 3); b++)
+		{
+			self notify("projectile_impact", GetWeapon("staff_lightning"), a_piano_keys[order[b]].origin);
+
+			wait 0.5;
+		}
+
+		wait 5;
+	}
+
+	while(!level flag::get("electric_puzzle_1_complete"))
+		wait 0.1;
+	
+	self RefreshMenu(menu, curs);
+}
+
+CompleteLightningDials()
+{
+	if(!level flag::get("electric_puzzle_1_complete"))
+		return self iPrintlnBold("^1ERROR: ^7The Song Must Be Completed Before Using This Option");
+	
+	if(level flag::get("electric_puzzle_2_complete"))
+		return self iPrintlnBold("^1ERROR: ^7This Step Has Already Been Completed");
+	
+	if(isDefined(level.turndials))
+		return self iPrintlnBold("^1ERROR: ^7This Step Is Currently Being Completed");
+	
+	level.turndials = true;
+	curs = self getCursor();
+    menu = self getCurrent();
+
+	foreach(relay in level.electric_relays)
+	{
+		if(relay.position == 2)
+			continue;
+
+		while(!isDefined(relay.connections[relay.position]) || relay.connections[relay.position] == "")
+		{
+			relay.trigger_stub notify("trigger", self);
+
+			wait 0.1;
+		}
+
+		wait 0.5;
+	}
+
+	while(!level flag::get("electric_puzzle_2_complete"))
+		wait 0.1;
+	
+	self RefreshMenu(menu, curs);
+}
+
+Align115Rings(type)
+{
+	if(level flag::get("disc_rotation_active"))
+		return self iPrintlnBold("^1ERROR: ^7Rings Are Currently Rotating");
+	
+	switch(type)
+	{
+		case "Ice":
+			num = 1;
+			break;
+		
+		case "Lightning":
+			num = 2;
+			break;
+		
+		case "Fire":
+			num = 3;
+			break;
+		
+		case "Wind":
+			num = 4;
+			break;
+		
+		default:
+			num = 1;
+			break;
+	}
+	
+	rings = GetEntArray("crypt_puzzle_disc", "script_noteworthy");
+	level flag::set("disc_rotation_active");
+
+	foreach(ring in rings)
+	{
+		if(ring.position == num - 1)
+			continue;
+		
+		ring.position = num - 1;
+		new_angles = (ring.angles[0], ring.position * 90, ring.angles[2]);
+
+		ring RotateTo(new_angles, 1, 0, 0);
+		ring PlaySound("zmb_crypt_disc_turn");
+
+		wait 0.75;
+		
+		ring.n_bryce_cake = num - 1;
+
+		ring PlaySound("zmb_crypt_disc_stop");
+		rumble_nearby_players(ring.origin, 1000, 2);
+
+		if(isdefined(ring.var_b1c02d8a))
+			ring.var_b1c02d8a clientfield::set("bryce_cake", ring.n_bryce_cake);
+	}
+
+	level flag::clear("disc_rotation_active");
+}
+
+rumble_nearby_players(v_center, n_range, n_rumble_enum)
+{
+	n_range_sq = n_range * n_range;
+	a_players = GetPlayers();
+	a_rumbled_players = [];
+	foreach(var_19408b7d, e_player in a_players)
+	{
+		if(DistanceSquared(v_center, e_player.origin) < n_range_sq)
+		{
+			e_player clientfield::set_to_player("player_rumble_and_shake", n_rumble_enum);
+			a_rumbled_players[a_rumbled_players.size] = e_player;
+		}
+	}
+
+	util::wait_network_frame();
+
+	foreach(var_5bcc30be, e_player in a_rumbled_players)
+		e_player clientfield::set_to_player("player_rumble_and_shake", 0);
 }

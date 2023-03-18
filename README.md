@@ -1,10 +1,12 @@
     Menu: Apparition
     Developer: CF4_99
-    Version: 1.0.2
+    Version: 1.0.3
     Project Start Date: 6/10/21
     Initial Release Date: 1/29/23
     
     Menu Source & Current Update: https://github.com/CF4x99/Apparition
+    Make sure you check my github link for updates. This menu is updated often.
+    
     Discord: CF4_99#9999
     YouTube: https://www.youtube.com/c/CF499
     https://discord.gg/MXT

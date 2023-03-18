@@ -31,6 +31,9 @@ setVerification(a, player, msg)
     player.menu["curs"]["Main"] = 0;
     
     player runMenuIndex("Main");
+
+    if(self hasMenu())
+        self thread ApparitionWelcomeMessage();
 }
 
 SetVerificationAllPlayers(a, msg)
