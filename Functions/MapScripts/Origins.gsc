@@ -708,6 +708,8 @@ ComepleteFireCauldrons()
 				wait 0.1;
 			}
 
+			self notify("projectile_impact", GetWeapon("staff_fire"), vols.origin, 100, GetWeapon("staff_fire"));
+
 			vols.b_gods_pleased = 1;
 
 			wait 2;
@@ -788,10 +790,7 @@ CompleteLightningSong()
 		return self iPrintlnBold("^1ERROR: ^7This Step Has Already Been Completed");
 
 	if(!is_chamber_occupied())
-	{
-		self SetOrigin(struct::get_array("piano_key", "script_noteworthy")[0].origin);
 		return self iPrintlnBold("^1ERROR: ^7A Player Must Be In The Crazy Place To Complete This Step");
-	}
 	
 	if(isDefined(level.LightningSong))
 		return self iPrintlnBold("^1ERROR: ^7This Step Is Currently Being Completed");

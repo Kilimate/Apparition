@@ -12,6 +12,7 @@ Godmode(player)
         while(isDefined(player.godmode))
         {
             player EnableInvulnerability();
+
             wait 0.05;
         }
     }

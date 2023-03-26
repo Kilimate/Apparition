@@ -310,7 +310,7 @@ DefineMenuArrays()
     SetDvar("wallRun_maxTimeMs_zm", 10000);
     SetDvar("playerEnergy_maxReserve_zm", 200);
 
-    sdvars = ["doublejump_enabled", "juke_enabled", "playerEnergy_enabled", "wallrun_enabled", "sprintLeap_enabled", "traverse_mode", "ui_allowDisplayContinue"];
+    sdvars = ["doublejump_enabled", "playerEnergy_enabled", "wallrun_enabled"];
 
     for(a = 0; a < sdvars.size; a++)
         SetDvar(sdvars[a], 1);

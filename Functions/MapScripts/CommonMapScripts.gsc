@@ -60,13 +60,8 @@ SamanthasHideAndSeekSong()
     if(level flag::get("snd_zhdegg_completed"))
         return self iPrintlnBold("^1ERROR: ^7Samantha's Hide & Seek Has Already Been Completed");
     
-    if(isDefined(level.StartedSamanthaSong))
-        return self iPrintlnBold("^1ERROR: ^7Samantha's Hide & Seek Has Already Been Started");
-    
     if(ReturnMapName(level.script) == "Kino Der Toten" && !level flag::get("snd_zhdegg_activate"))
         return self iPrintlnBold("^1ERROR: ^7Samantha's Hide & Seek Can't Be Completed Until The Door Knocking Combination Has Been Completed");
-
-    level.StartedSamanthaSong = true;
     
     curs = self getCursor();
     menu = self getCurrent();

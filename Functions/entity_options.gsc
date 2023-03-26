@@ -5,7 +5,7 @@ DeleteEntity(ent)
     
     if(level.SavedMapEntities.size > 1)
     {
-        level.SavedMapEntities = arrayRemove(level.SavedMapEntities, ent); //Removes ent from level.SavedMapEntities array
+        level.SavedMapEntities = ArrayRemove(level.SavedMapEntities, ent); //Removes ent from level.SavedMapEntities array
         ent delete();
         
         self.menuParent[(self.menuParent.size - 1)] = undefined; //Remove entity submenu from parent array

@@ -591,6 +591,11 @@ runMenuIndex(menu)
                     self addOpt("No Power Switches Found");
             break;
         
+        case "Revelations Scripts":
+            self addMenu(menu, "Revelations Scripts");
+                self addOptBool(level flag::get("character_stones_done"), "Damage Tombstones", ::DamageGraveStones);
+            break;
+        
         case "Entity Options":
             self addMenu(menu, "Entity Options");
 
