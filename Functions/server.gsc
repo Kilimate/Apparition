@@ -27,7 +27,11 @@ SetRound(round)
     level.zombie_total = 0;
 	level.round_number = round;
 	world.roundnumber = (round ^ 115);
-    SetRoundsPlayed((round + 1));
+    SetRoundsPlayed(round);
+
+    level notify("kill_round");
+
+    wait 1;
 
     for(a = 0; a < 3; a++)
     {
@@ -60,6 +64,7 @@ AntiEndGame()
     {
         level.hostforcedend = true;
         level.forcedend = true;
+        level.gameended = true;
         
         foreach(player in level.players)
             player thread WatchForEndRound();
@@ -67,8 +72,10 @@ AntiEndGame()
     else
     {
         level notify("EndAntiEndGame");
+
         level.hostforcedend = false;
         level.forcedend = false;
+        level.gameended = false;
     }
 }
 
@@ -87,6 +94,7 @@ WatchForEndRound()
             {
                 level.hostforcedend = false;
                 level.forcedend = false;
+                level.gameended = false;
                 wait 0.1;
 
                 level thread globallogic::forceEnd();

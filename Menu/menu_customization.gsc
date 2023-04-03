@@ -274,11 +274,18 @@ DisableOptionCounter()
     self openMenu1();
 }
 
+DisableMenuWM()
+{
+    self.menu["DisableMenuWM"] = isDefined(self.menu["DisableMenuWM"]) ? undefined : true;
+    self SaveMenuTheme();
+}
+
 SaveMenuTheme()
 {
     design = isDefined(self.menu["NativeDesign"]) ? "Native;" : level.menuName + ";";
     design += self.menu["ToggleStyle"] + ";" + self.menu["X"] + ";" + self.menu["Y"] + ";" + self.menu["MenuWidth"] + ";" + self.menu["MaxOptions"] + ";";
     design += isDefined(self.menu["DisableOptionCounter"]) ? "Disable;" : "Enable;";
+    design += isDefined(self.menu["DisableMenuWM"]) ? "Disable;" : "Enable;";
     design += isDefined(self.SmoothRainbowTheme) ? "Rainbow" : self.menu["Main_Color"];
     
     SetDvar("MenuTheme" + self GetXUID(), design);
@@ -311,6 +318,7 @@ LoadMenuVars() //Pre-Set Menu Variables.
 
     //Change 'undefined' to 'true' if you want to disable the option counter by default
     self.menu["DisableOptionCounter"] = true;
+    self.menu["DisableMenuWM"] = undefined;
 
     //Loading Saved Menu Variables
     dvar = GetDvarString("MenuTheme" + self GetXUID());
@@ -327,12 +335,13 @@ LoadMenuVars() //Pre-Set Menu Variables.
         self.menu["MenuWidth"] = Int(dvarSep[4]);
         self.menu["MaxOptions"] = Int(dvarSep[5]);
         self.menu["DisableOptionCounter"] = (dvarSep[6] == "Disable") ? true : undefined;
+        self.menu["DisableMenuWM"] = (dvarSep[7] == "Disable") ? true : undefined;
         
-        if(dvarSep[7] == "Rainbow")
+        if(dvarSep[8] == "Rainbow")
             self thread SmoothRainbowTheme();
         else
         {
-            SetDvar(self GetXUID() + level.menuName + "Color", dvarSep[7]);
+            SetDvar(self GetXUID() + level.menuName + "Color", dvarSep[8]);
             self.menu["Main_Color"] = GetDvarVector1(self GetXUID() + level.menuName + "Color");
         }
     }
@@ -343,6 +352,7 @@ LoadMenuVars() //Pre-Set Menu Variables.
     }
 }
 
+//Decided to remake GetDvarVector
 GetDvarVector1(var)
 {
     dvar = "";

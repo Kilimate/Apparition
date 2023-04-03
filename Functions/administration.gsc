@@ -156,7 +156,7 @@ AC130FireRate(ammo)
             return 0.01;
         
         case zm_weapons::get_upgrade_weapon(level.start_weapon):
-            return 0.25;
+            return 0.5;
         
         case GetWeapon("hunter_rocket_turret_player"):
             return 2;
@@ -193,6 +193,7 @@ AC130Rotate()
     while(isDefined(self))
     {
         self RotateYaw(360, 50);
+        
         wait 49.9;
     }
 }
@@ -206,7 +207,7 @@ RefreshAC130HUD(ammo)
         self CloseLUIMenu(self.AC130HUDLUI);
 
     self.AC130HUD = [];
-    self.AC130HUDLUI = LUI_createText("", 0, 20, 375, 1023, (1, 1, 1));
+    self.AC130HUDLUI = self LUI_createText("", 0, 20, 375, 1023, (1, 1, 1));
 
     switch(ammo)
     {
@@ -432,10 +433,8 @@ SetCustomSentryWeapon(weapon)
     self.CustomSentryWeapon = weapon;
 
     if(isDefined(self.CustomSentry))
-    {
-        self CustomSentry(self.CustomSentryOrigin);
-        self thread CustomSentry(self.CustomSentryOrigin);
-    }
+        for(a = 0; a < 2; a++)
+            self CustomSentry(self.CustomSentryOrigin);
 }
 
 ArtilleryStrike()
@@ -530,6 +529,7 @@ Tornado()
         for(b = 0; b < (a + 2); b++)
         {
             level.TornadoParts[level.TornadoParts.size] = SpawnScriptModel(level.TornadoParts[0].origin + (Cos((b * 360) / (a + 2)) * (a * 6), Sin((b * 360) / (a + 2)) * (a * 6), (a * 18)), "tag_origin");
+            
             level.TornadoParts[(level.TornadoParts.size - 1)] LinkTo(level.TornadoParts[0]);
             level.TornadoParts[(level.TornadoParts.size - 1)] SpawnableArray("Tornado");
             level.TornadoParts[(level.TornadoParts.size - 1)] clientfield::set("powerup_fx", color);
@@ -567,6 +567,7 @@ TornadoMovementWatch(DefOrg)
             self MoveTo(DefOrg, 3);
 
             wait 3.5;
+
             self thread TornadoMovement();
         }
 
@@ -615,6 +616,7 @@ TornadoLaunchPlayer(a)
     self SetVelocity((450, 450, 850));
 
     wait 1;
+
     self.OnTornado = undefined;
 }
 
@@ -651,7 +653,9 @@ TornadoLaunchEntity(a)
 
     self Unlink();
     self Launch(AnglesToForward(self.angles) * 7500);
+
     wait 1;
+
     self.OnTornado = undefined;
 }
 
@@ -698,6 +702,7 @@ TornadoLaunchZombie(a)
     linker = SpawnScriptModel(self.origin, "tag_origin");
     self LinkTo(linker, "tag_origin");
     linker Launch(AnglesToForward(self.angles) * 7500);
+
     wait 1;
 
     if(!isDefined(self) || !IsAlive(self))
@@ -916,8 +921,10 @@ ControllableZombie()
 
     CZSavedOrigin = self.origin;
     CZSavedAngles = self.angles;
-    
     zombie = zombie_utility::spawn_zombie(level.zombie_spawners[RandomInt(level.zombie_spawners.size)]);
+
+    self SetStance("stand");
+
     wait 0.1;
     
     if(isDefined(zombie))
@@ -984,7 +991,7 @@ ControllableZombie()
                 break;
             }
             
-            wait 0.1;
+            wait 0.01;
         }
     }
     else

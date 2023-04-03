@@ -26,7 +26,7 @@ runMenuIndex(menu)
 
                     if(self getVerification() > 2) //Co-Host
                     {
-                        self addOpt("Administration", ::newMenu, "Administration");
+                        self addOpt("Advanced Scripts", ::newMenu, "Advanced Scripts");
 
                         if(ReturnMapName(level.script) != "Unknown")
                             self addOpt(ReturnMapName(level.script) + " Scripts", ::newMenu, ReturnMapName(level.script) + " Scripts");
@@ -65,6 +65,7 @@ runMenuIndex(menu)
                 self addOptSlider("Toggle Style", ::ToggleStyle, "Boxes;Text Color");
                 self addOptIncSlider("Max Options", ::MenuMaxOptions, 3, 9, 9, 2); //Do Not Change These Values.
                 self addOptBool(self.menu["DisableOptionCounter"], "Disable Option Counter", ::DisableOptionCounter);
+                self addOptBool(self.menu["DisableMenuWM"], "Disable Watermark", ::DisableMenuWM);
             break;
         
         case "Menu Position":
@@ -148,7 +149,7 @@ runMenuIndex(menu)
             if(!isDefined(self.CustomSentryWeapon))
                 self.CustomSentryWeapon = GetWeapon("minigun");
             
-            self addMenu(menu, "Administration");
+            self addMenu(menu, "Advanced Scripts");
                 self addOpt("3D Drawing", ::newMenu, "3D Drawing Options");
                 self addOptSlider("AC-130", ::AC130, "Fly;Walking");
 
@@ -1775,7 +1776,10 @@ menuMonitor()
                         self.menu["curs"][menu] += (self AttackButtonPressed() || self ActionSlotTwoButtonPressed()) ? 1 : -1;
                         
                         if(curs != self.menu["curs"][menu])
+                        {
                             self scrollMenu(((self AttackButtonPressed() || self ActionSlotTwoButtonPressed()) ? 1 : -1), curs);
+                            self PlaySoundToPlayer("uin_alert_lockon", self);
+                        }
 
                         wait 0.2;
                     }
@@ -1815,6 +1819,8 @@ menuMonitor()
                                 self SetSlider(dir);
                             else
                                 self SetIncSlider(dir);
+                            
+                            self PlaySoundToPlayer("uin_alert_lockon", self);
 
                             wait 0.2;
                         }
@@ -2026,7 +2032,7 @@ openMenu1(menu)
     
     hud = ["banners", "title", "optionCount", "scroller", "MenuName", "NativeBar"];
 
-    hudFadeInTime = 0.25;
+    hudFadeInTime = 0;
 
     for(a = 0; a < hud.size; a++)
         if(isDefined(self.menu["ui"][hud[a]]))
@@ -2163,7 +2169,7 @@ DestroyOpts()
 {
     hud = ["text", "BoolOpt", "BoolBack", "subMenu", "IntSlider", "StringSlider"];
 
-    for(a = 0;a < hud.size; a++)
+    for(a = 0; a < hud.size; a++)
         destroyAll(self.menu["ui"][hud[a]]);
 }
 

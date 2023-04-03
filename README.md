@@ -17,9 +17,9 @@
 
     Controls:
         Open: Aim & Knife
-        Scroll: Aim/Shoot Or Actionslot 1/2(Controller Users: Dpad up/down)
-        Slider Scroll: Actionslot 3/4(Controller Users: Dpad left/right)
-        Select: Use Button(PS Controller: Square || Xbox Controller: X)
+        Scroll: Aim/Shoot Or Actionslots 1 & 2(Controller Users: Dpad up/down)
+        Slider Scroll: Actionslot 3 & 4(Controller Users: Dpad left/right)
+        Select: Use Button(PlayStation Controller: Square || Xbox Controller: X)
         Go Back/Exit: Knife
 
     
@@ -32,14 +32,14 @@
 
 
 
-    Apparition has been in development for a long time(Too long).
+    Apparition has been in development for a long time(too long).
     While I haven't spent every second of every day on this project, a lot of time and work has gone into it.
     Every step of the way, I have tried to make it one of the biggest, and best menus for BO3 Zombies.
     I have spent countless hours not only developing, but also bug testing every option in this menu.
     While I don't think it will ever officially be finished, I thought it was in a good state to be released.
 
-    While I do test everything I add, or change, there are probably a few things I have missed.
-    If you manage to come across any bugs, please message me on discord.
+    While I do test everything I add, or change, there are probably things I have missed.
+    If you come across any bugs, please message me on discord.
 
 
 

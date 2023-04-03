@@ -18,9 +18,9 @@
 
     Controls:
         Open: Aim & Knife
-        Scroll: Aim/Shoot Or Actionslot 1/2(Controller Users: Dpad up/down)
-        Slider Scroll: Actionslot 3/4(Controller Users: Dpad left/right)
-        Select: Use Button(PS Controller: Square || Xbox Controller: X)
+        Scroll: Aim/Shoot Or Actionslots 1 & 2(Controller Users: Dpad up/down)
+        Slider Scroll: Actionslot 3 & 4(Controller Users: Dpad left/right)
+        Select: Use Button(PlayStation Controller: Square || Xbox Controller: X)
         Go Back/Exit: Knife
     
 
@@ -33,14 +33,14 @@
 
 
 
-    Apparition has been in development for a long time(Too long).
+    Apparition has been in development for a long time(too long).
     While I haven't spent every second of every day on this project, a lot of time and work has gone into it.
     Every step of the way, I have tried to make it one of the biggest, and best menus for BO3 Zombies.
     I have spent countless hours not only developing, but also bug testing every option in this menu.
     While I don't think it will ever officially be finished, I thought it was in a good state to be released.
 
-    While I do test everything I add, or change, there are probably a few things I have missed.
-    If you manage to come across any bugs, please message me on discord.
+    While I do test everything I add, or change, there are probably things I have missed.
+    If you come across any bugs, please message me on discord.
 
 
 
@@ -306,7 +306,7 @@ DefineMenuArrays()
 
     level.boneTags = "j_head;j_neck;j_spine4;j_spinelower;j_mainroot;pelvis;j_ankle_le;j_ankle_ri";
     level.mapNames = ["zm_zod", "zm_factory", "zm_castle", "zm_island", "zm_stalingrad", "zm_genesis", "zm_prototype", "zm_asylum", "zm_sumpf", "zm_theater", "zm_cosmodrome", "zm_temple", "zm_moon", "zm_tomb"];
-
+    
     SetDvar("wallRun_maxTimeMs_zm", 10000);
     SetDvar("playerEnergy_maxReserve_zm", 200);
 
@@ -363,4 +363,27 @@ defineVariables()
 ApparitionWelcomeMessage()
 {
     //You can add a welcome message that will show for players when they're given the menu.
+    if(isDefined(self.WelcomeDisplay))
+        return;
+    
+    self.WelcomeDisplay = self LUI_createText("", 2, 5000, 650, 1023, (0, 0, 0));
+
+    //Only displays when the player is verified, and isn't in the menu.
+    //Can be disabled in Menu Customization
+    //If you want to disable by default: menu_customization.gsc -> LoadMenuVars() -> self.menu["DisableMenuWM"] = undefined; <- Change to true
+
+    while(isDefined(self.WelcomeDisplay))
+    {
+        if(self GetLUIMenuData(self.WelcomeDisplay, "text") != "Status: " + self.menuState["verification"] + "\n[{+speed_throw}] & [{+melee}] To Open")
+            self SetLUIMenuData(self.WelcomeDisplay, "text", "Status: " + self.menuState["verification"] + "\n[{+speed_throw}] & [{+melee}] To Open");
+        
+        if((isDefined(self.menu["DisableMenuWM"]) || self isInMenu() || !self hasMenu()) && self GetLUIMenuData(self.WelcomeDisplay, "x") != 5000)
+            self SetLUIMenuData(self.WelcomeDisplay, "x", 5000);
+        else if(!isDefined(self.menu["DisableMenuWM"]) && !self isInMenu() && self GetLUIMenuData(self.WelcomeDisplay, "x") == 5000)
+            self SetLUIMenuData(self.WelcomeDisplay, "x", 129);
+        
+        self lui::set_color(self.WelcomeDisplay, level.RGBFadeColor);
+
+        wait 0.01;
+    }
 }
