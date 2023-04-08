@@ -276,6 +276,20 @@ DisableZombieModel()
             zombies[a] SetModel(zombies[a].savedModel);
 }
 
+ZombieAnimScript(anm, ntfy)
+{
+    zombies = GetAITeamArray(level.zombie_team);
+
+    for(a = 0; a < zombies.size; a++)
+    {
+        if(!isDefined(zombies[a]) || !IsAlive(zombies[a]))
+            continue;
+        
+        zombies[a] StopAnimScripted(0);
+        zombies[a] AnimScripted(ntfy, zombies[a].origin, zombies[a].angles, anm);
+    }
+}
+
 DisableZombieSpawning()
 {
     SetDvar("ai_disableSpawn", (GetDvarString("ai_disableSpawn") == "0") ? "1" : "0");

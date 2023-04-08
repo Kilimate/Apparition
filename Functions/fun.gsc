@@ -233,6 +233,7 @@ AdventureTime(player)
 {  
     if(isDefined(player.AdventureTime))
         return;
+    
     if(player isPlayerLinked())
         return self iPrintlnBold("^1ERROR: ^7Player Is Linked To An Entity");
     
@@ -351,6 +352,7 @@ SpecNadeFollow(camera)
     while(isDefined(self))
     {
         camera.origin = (self.origin + (0, 0, 10)) - AnglesToForward(camera.angles) * 50;
+
         wait 0.05;
     }
 }
@@ -386,6 +388,7 @@ NukeNade()
     while(isDefined(self))
     {
         origin = self.origin;
+
         wait 0.05;
     }
 
@@ -617,7 +620,7 @@ GrapplingGun(player)
         {
             player waittill("weapon_fired");
             
-            trace = BulletTrace(self GetWeaponMuzzlePoint(), self GetWeaponMuzzlePoint() + VectorScale(AnglesToForward(self GetPlayerAngles()), 1000000), 0, self);
+            trace = BulletTrace(player GetWeaponMuzzlePoint(), player GetWeaponMuzzlePoint() + VectorScale(AnglesToForward(player GetPlayerAngles()), 1000000), 0, player);
             
             pos = trace["position"];
             surface = trace["surfacetype"];
@@ -776,9 +779,20 @@ ShowHitmarkers(player)
     player.ShowHitmarkers = isDefined(player.ShowHitmarkers) ? undefined : true;
 }
 
+HitmarkerFeedback(feedback, player)
+{
+    player.HitmarkerFeedback = feedback;
+
+    if(isDefined(player.hud_damagefeedback))
+        player.hud_damagefeedback SetShaderValues(player.HitmarkerFeedback, 24, 48);
+}
+
 HitMarkerColor(color, player)
 {
-    self.HitMarkerColor = color;
+    player.HitMarkerColor = color;
+
+    if(isDefined(player.hud_damagefeedback) && color != "Rainbow")
+        player.hud_damagefeedback.color = color;
 }
 
 PowerUpMagnet(player)

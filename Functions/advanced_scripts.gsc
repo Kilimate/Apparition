@@ -1051,9 +1051,10 @@ ZombieAttack()
         v_angles = VectorToAngles((v_angles[0], v_angles[1], 0));
     }
     
-    self AnimScripted("attack_anim", self.origin, v_angles, "ai_zombie_base_ad_attack_v1");
+    animation = "ai_zombie_base_ad_attack_v1";
+    self AnimScripted("attack_anim", self.origin, v_angles, animation);
     
-    wait GetAnimLength("ai_zombie_base_ad_attack_v1");
+    wait GetAnimLength(animation);
 }
 
 BodyGuard()

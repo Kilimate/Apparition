@@ -91,7 +91,7 @@ BindNoclip(player)
 
     while(isDefined(player.NoclipBind))
     {
-        if(player FragButtonPressed() && !isDefined(self.menu["DisableMenuControls"]))
+        if(player FragButtonPressed() && !isDefined(player.menu["DisableMenuControls"]))
         {
             player thread Noclip1(player);
             wait 0.2;

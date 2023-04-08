@@ -99,6 +99,9 @@ DamageFeedBack()
         }
         
         self zombie_utility::show_hit_marker();
+        
+        if(isDefined(self.HitmarkerFeedback))
+            self.hud_damagefeedback SetShaderValues(self.HitmarkerFeedback, 24, 48);
     }
 }
 

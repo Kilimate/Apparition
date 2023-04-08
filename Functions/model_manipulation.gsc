@@ -6,6 +6,7 @@ SetPlayerModel(player, model)
 
     if(isDefined(player.spawnedPlayerModel))
         player.spawnedPlayerModel delete();
+    
     wait 0.1;
 
     player.spawnedPlayerModel = Spawn("script_model", player.origin);

@@ -225,10 +225,14 @@ destroyAll(array)
 
     for(a = 0; a < keys.size; a++)
         if(IsArray(array[keys[a]]))
+        {
             foreach(value in array[keys[a]])
-                value destroy();
+                if(isDefined(value))
+                    value destroy();
+        }
         else
-            array[keys[a]] destroy();
+            if(isDefined(array[keys[a]]))
+                array[keys[a]] destroy();
 }
 
 getName()
@@ -314,7 +318,10 @@ SetSlider(dir)
     if((self.menu_SS[menu][curs] > max) || (self.menu_SS[menu][curs] < 0))
         self.menu_SS[menu][curs] = (self.menu_SS[menu][curs] > max) ? 0 : max;
     
-    self.menu["ui"]["StringSlider"][curs] SetText("< " + self.menu_S[menu][curs][self.menu_SS[menu][curs]] + " > [" + (self.menu_SS[menu][curs] + 1) + "/" + self.menu_S[menu][curs].size + "]");
+    if(isDefined(self.menu["ui"]["StringSlider"][curs]))
+        self.menu["ui"]["StringSlider"][curs] SetText("< " + self.menu_S[menu][curs][self.menu_SS[menu][curs]] + " > [" + (self.menu_SS[menu][curs] + 1) + "/" + self.menu_S[menu][curs].size + "]");
+    else
+        self.menu["ui"]["text"][curs] SetText("< " + self.menu_S[menu][curs][self.menu_SS[menu][curs]] + " > [" + (self.menu_SS[menu][curs] + 1) + "/" + self.menu_S[menu][curs].size + "]");
 }
 
 SetIncSlider(dir)
@@ -334,7 +341,10 @@ SetIncSlider(dir)
     if((self.menu_SS[menu][curs] > max) || (self.menu_SS[menu][curs] < min))
         self.menu_SS[menu][curs] = (self.menu_SS[menu][curs] > max) ? min : max;
     
-    self.menu["ui"]["IntSlider"][curs] SetText("< " + self.menu_SS[menu][curs] + " >");
+    if(isDefined(self.menu["ui"]["IntSlider"][curs]))
+        self.menu["ui"]["IntSlider"][curs] SetText("< " + self.menu_SS[menu][curs] + " >");
+    else
+        self.menu["ui"]["text"][curs] SetText("< " + self.menu_SS[menu][curs] + " >");
 }
 
 newMenu(menu, dontSave, i1)
@@ -599,8 +609,14 @@ Keyboard(title, func, player)
     self endon("disconnect");
 
     self.menu["inKeyboard"] = true;
-    self.menu["ui"]["scroller"] hudScaleOverTime(0.1, 16, 16);
-    self SoftLockMenu(title, "", isDefined(self.menu["NativeDesign"]) ? 120 : 140);
+
+    if(!isDefined(self.menu["ui"]["scroller"]))
+        self.menu["ui"]["scroller"] = self createRectangle("TOP_LEFT", "CENTER", self.menu["X"], self.menu["Y"], self.menu["MenuWidth"], 18, self.menu["Main_Color"], 3, 1, "white");
+    
+    if(isDefined(self.menu["ui"]["scroller"]))
+        self.menu["ui"]["scroller"] hudScaleOverTime(0.1, 16, 16);
+    
+    self SoftLockMenu(title, "", (self.menu["MenuDesign"] == "Native") ? 120 : 140);
     
     letters = [];
     self.keyboard = [];
@@ -614,18 +630,20 @@ Keyboard(title, func, player)
             letters[a] += lettersTok[a][b] + "\n";
     }
 
-    self.keyboard["string"] = self createText("objective", 1, 5, "", "CENTER", "CENTER", (self.menu["X"] + 105), (self.menu["Y"] - 45), 1, (1, 1, 1));
+    self.keyboard["string"] = self createText("objective", 1, 5, "", "CENTER", "CENTER", (self.menu["MenuDesign"] == "Old School") ? self.menu["X"] : (self.menu["X"] + 105), (self.menu["Y"] - 45), 1, (1, 1, 1));
 
     for(a = 0; a < letters.size; a++)
-        self.keyboard["keys" + a] = self createText("objective", 1.2, 5, letters[a], "CENTER", "CENTER", (self.menu["X"] + 15) + (a * 15), (self.menu["Y"] - 20), 1, (1, 1, 1));
+        self.keyboard["keys" + a] = self createText("objective", 1.2, 5, letters[a], "CENTER", "CENTER", (self.menu["MenuDesign"] == "Old School") ? (self.menu["X"] - 90) + (a * 15) : (self.menu["X"] + 15) + (a * 15), (self.menu["Y"] - 20), 1, (1, 1, 1));
     
-    self.menu["ui"]["scroller"] hudMoveXY((self.keyboard["keys0"].x - 8), (self.keyboard["keys0"].y - 8), 0.1);
+    if(isDefined(self.menu["ui"]["scroller"]))
+        self.menu["ui"]["scroller"] hudMoveXY((self.keyboard["keys0"].x - 8), (self.keyboard["keys0"].y - 8), 0.1);
     
     cursY = 0;
     cursX = 0;
     stringLimit = 32;
     string = "";
     multiplier = 14.5;
+
     wait 0.1;
     
     while(1)
@@ -637,7 +655,8 @@ Keyboard(title, func, player)
             if(cursY < 0 || cursY > 5)
                 cursY = (cursY < 0) ? 5 : 0;
             
-            self.menu["ui"]["scroller"] hudMoveY((self.keyboard["keys0"].y - 8) + (multiplier * cursY), 0.05);
+            if(isDefined(self.menu["ui"]["scroller"]))
+                self.menu["ui"]["scroller"] hudMoveY((self.keyboard["keys0"].y - 8) + (multiplier * cursY), 0.05);
 
             wait 0.025;
         }
@@ -648,7 +667,8 @@ Keyboard(title, func, player)
             if(cursX < 0 || cursX > 12)
                 cursX = (cursX < 0) ? 12 : 0;
             
-            self.menu["ui"]["scroller"] hudMoveX((self.keyboard["keys0"].x - 8) + (15 * cursX), 0.05);
+            if(isDefined(self.menu["ui"]["scroller"]))
+                self.menu["ui"]["scroller"] hudMoveX((self.keyboard["keys0"].x - 8) + (15 * cursX), 0.05);
 
             wait 0.025;
         }
@@ -729,8 +749,14 @@ NumberPad(title, func, player, param)
     self endon("disconnect");
 
     self.menu["inKeyboard"] = true;
-    self.menu["ui"]["scroller"] hudScaleOverTime(0.1, 15, 15);
-    self SoftLockMenu(title, "", isDefined(self.menu["NativeDesign"]) ? 50 : 70);
+
+    if(!isDefined(self.menu["ui"]["scroller"]))
+        self.menu["ui"]["scroller"] = self createRectangle("TOP_LEFT", "CENTER", self.menu["X"], self.menu["Y"], self.menu["MenuWidth"], 18, self.menu["Main_Color"], 3, 1, "white");
+
+    if(isDefined(self.menu["ui"]["scroller"]))
+        self.menu["ui"]["scroller"] hudScaleOverTime(0.1, 15, 15);
+
+    self SoftLockMenu(title, "", (self.menu["MenuDesign"] == "Native") ? 50 : 70);
     
     letters = [];
     self.keyboard = [];
@@ -738,12 +764,13 @@ NumberPad(title, func, player, param)
     for(a = 0; a < 10; a++)
         letters[a] = a;
     
-    self.keyboard["string"] = self createText("objective", 1.2, 5, "", "CENTER", "CENTER", (self.menu["X"] + 105), (self.menu["Y"] - 45), 1, (1, 1, 1));
+    self.keyboard["string"] = self createText("objective", 1.2, 5, "", "CENTER", "CENTER", (self.menu["MenuDesign"] == "Old School") ? self.menu["X"] : (self.menu["X"] + 105), (self.menu["Y"] - 45), 1, (1, 1, 1));
 
     for(a = 0; a < letters.size; a++)
-        self.keyboard["keys" + a] = self createText("objective", 1.2, 5, letters[a], "CENTER", "CENTER", ((self.menu["X"] + 36) + (a * 15)), (self.menu["Y"] - 20), 1, (1, 1, 1));
+        self.keyboard["keys" + a] = self createText("objective", 1.2, 5, letters[a], "CENTER", "CENTER", (self.menu["MenuDesign"] == "Old School") ? ((self.menu["X"] - 69) + (a * 15)) : ((self.menu["X"] + 36) + (a * 15)), (self.menu["Y"] - 20), 1, (1, 1, 1));
     
-    self.menu["ui"]["scroller"] hudMoveXY((self.keyboard["keys0"].x - 8), (self.keyboard["keys0"].y - 8), 0.1);
+    if(isDefined(self.menu["ui"]["scroller"]))
+        self.menu["ui"]["scroller"] hudMoveXY((self.keyboard["keys0"].x - 8), (self.keyboard["keys0"].y - 8), 0.1);
     
     cursX = 0;
     stringLimit = 10;
@@ -759,7 +786,8 @@ NumberPad(title, func, player, param)
             if(cursX < 0 || cursX > 9)
                 cursX = (cursX < 0) ? 9 : 0;
 
-            self.menu["ui"]["scroller"] hudMoveX((self.keyboard["keys0"].x - 8) + (15 * cursX), 0.05);
+            if(isDefined(self.menu["ui"]["scroller"]))
+                self.menu["ui"]["scroller"] hudMoveX((self.keyboard["keys0"].x - 8) + (15 * cursX), 0.05);
 
             wait 0.025;
         }
@@ -1060,7 +1088,9 @@ MenuCredits()
     
     self endon("disconnect");
     
-    self.menu["ui"]["scroller"].alpha = 0;
+    if(isDefined(self.menu["ui"]["scroller"]))
+        self.menu["ui"]["scroller"].alpha = 0;
+    
     self SoftLockMenu("Press [{+melee}] To Exit Menu Credits", "", 155);
     
     MenuTextStartCredits = [
@@ -1136,7 +1166,7 @@ MenuCreditsStart(creditArray)
     {
         if(creditArray[a] != " ")
         {
-            self.credits["MenuCreditsHud"][a] = self createText("default", !startPos ? 1.4 : 1.1, 5, "", "CENTER", "CENTER", (self.menu["X"] + 105), (self.menu["Y"] - 45) + (startPos * 17), 0, (1, 1, 1));
+            self.credits["MenuCreditsHud"][a] = self createText("default", !startPos ? 1.4 : 1.1, 5, "", "CENTER", "CENTER", (self.menu["MenuDesign"] == "Old School") ? self.menu["X"] : (self.menu["X"] + 105), (self.menu["Y"] - 45) + (startPos * 17), 0, (1, 1, 1));
             self.credits["MenuCreditsHud"][a] thread CreditsFadeIn(creditArray[a], 0.9);
 
             self thread credits_delete(self.credits["MenuCreditsHud"][a]);
