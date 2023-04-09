@@ -49,7 +49,7 @@
 
         Known Issues On Custom Maps(Ones that can't, or won't, be fixed):
 
-            Weaponry - Not all weapons are in the right category:
+            Weaponry - Not all weapons are in the right category(Also applies to custom weapon mods):
                 ~ I am aware of this. There isn't anything I can do about it. Most of them, if not all, are moved into the 'Specials' Category.
 
 
@@ -366,23 +366,29 @@ ApparitionWelcomeMessage()
     if(isDefined(self.WelcomeDisplay))
         return;
     
-    self.WelcomeDisplay = self LUI_createText("", 2, 5000, 650, 1023, (0, 0, 0));
+    self.WelcomeDisplay = true;
+    
 
     //Only displays when the player is verified, and isn't in the menu.
     //Can be disabled in Menu Customization
     //If you want to disable by default: menu_customization.gsc -> LoadMenuVars() -> self.menu["DisableMenuWM"] = undefined; <- Change to true
 
-    while(isDefined(self.WelcomeDisplay))
+    while(1)
     {
-        if(self GetLUIMenuData(self.WelcomeDisplay, "text") != "Status: " + self.menuState["verification"] + "\n[{+speed_throw}] & [{+melee}] To Open")
-            self SetLUIMenuData(self.WelcomeDisplay, "text", "Status: " + self.menuState["verification"] + "\n[{+speed_throw}] & [{+melee}] To Open");
+        if(!isDefined(self.MenuWatermark) && !isDefined(self.menu["DisableMenuWM"]))
+            self.MenuWatermark = self LUI_createText("", 2, 129, 650, 1023, (0, 0, 0));
         
-        if((isDefined(self.menu["DisableMenuWM"]) || self isInMenu() || !self hasMenu()) && self GetLUIMenuData(self.WelcomeDisplay, "x") != 5000)
-            self SetLUIMenuData(self.WelcomeDisplay, "x", 5000);
-        else if(!isDefined(self.menu["DisableMenuWM"]) && !self isInMenu() && self GetLUIMenuData(self.WelcomeDisplay, "x") == 5000)
-            self SetLUIMenuData(self.WelcomeDisplay, "x", 129);
+        if(isDefined(self.MenuWatermark) && (isDefined(self.menu["DisableMenuWM"]) || self isInMenu() || !self hasMenu()))
+        {
+            self CloseLUIMenu(self.MenuWatermark);
+            self.MenuWatermark = undefined;
+        }
         
-        self lui::set_color(self.WelcomeDisplay, level.RGBFadeColor);
+        if(isDefined(self.MenuWatermark) && self GetLUIMenuData(self.MenuWatermark, "text") != "Status: " + self.menuState["verification"] + "\n[{+speed_throw}] & [{+melee}] To Open")
+            self SetLUIMenuData(self.MenuWatermark, "text", "Status: " + self.menuState["verification"] + "\n[{+speed_throw}] & [{+melee}] To Open");
+        
+        if(isDefined(self.MenuWatermark))
+            self lui::set_color(self.MenuWatermark, level.RGBFadeColor);
 
         wait 0.01;
     }

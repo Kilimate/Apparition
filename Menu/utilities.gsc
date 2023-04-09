@@ -321,7 +321,7 @@ SetSlider(dir)
     if(isDefined(self.menu["ui"]["StringSlider"][curs]))
         self.menu["ui"]["StringSlider"][curs] SetText("< " + self.menu_S[menu][curs][self.menu_SS[menu][curs]] + " > [" + (self.menu_SS[menu][curs] + 1) + "/" + self.menu_S[menu][curs].size + "]");
     else
-        self.menu["ui"]["text"][curs] SetText("< " + self.menu_S[menu][curs][self.menu_SS[menu][curs]] + " > [" + (self.menu_SS[menu][curs] + 1) + "/" + self.menu_S[menu][curs].size + "]");
+        self.menu["ui"]["text"][curs] SetText(self.menu["items"][self getCurrent()].name[curs] + " < " + self.menu_S[menu][curs][self.menu_SS[menu][curs]] + " > [" + (self.menu_SS[menu][curs] + 1) + "/" + self.menu_S[menu][curs].size + "]");
 }
 
 SetIncSlider(dir)
@@ -344,7 +344,7 @@ SetIncSlider(dir)
     if(isDefined(self.menu["ui"]["IntSlider"][curs]))
         self.menu["ui"]["IntSlider"][curs] SetText("< " + self.menu_SS[menu][curs] + " >");
     else
-        self.menu["ui"]["text"][curs] SetText("< " + self.menu_SS[menu][curs] + " >");
+        self.menu["ui"]["text"][curs] SetText(self.menu["items"][self getCurrent()].name[curs] + " < " + self.menu_SS[menu][curs] + " >");
 }
 
 newMenu(menu, dontSave, i1)
@@ -1059,13 +1059,11 @@ GEntityProtection()
 {
     level.GEntityProtection = isDefined(level.GEntityProtection) ? undefined : true;
 
-    self endon("disconnect");
-
     while(isDefined(level.GEntityProtection))
     {
         ents = GetEntArray("script_model", "classname");
 
-        if(ents.size > 525)
+        if(ents.size > 550)
         {
             ents[(ents.size - 1)] delete();
             self iPrintlnBold("^1" + ToUpper(level.menuName) + ": ^7G_Entity Prevented");

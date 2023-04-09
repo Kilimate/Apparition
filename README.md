@@ -48,7 +48,7 @@
 
         Known Issues On Custom Maps(Ones that can't, or won't, be fixed):
 
-            Weaponry - Not all weapons are in the right category:
+            Weaponry - Not all weapons are in the right category(Also applies to custom weapon mods):
                 ~ I am aware of this. There isn't anything I can do about it. Most of them, if not all, are moved into the 'Specials' Category.
 
 
