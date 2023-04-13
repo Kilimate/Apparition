@@ -1874,30 +1874,30 @@ menuMonitor()
     }
 }
 
-ExeFunction(function, i1, i2, i3, i4, i5, i6)
+ExeFunction(fnc, i1, i2, i3, i4, i5, i6)
 {
-    if(!isDefined(function))
+    if(!isDefined(fnc))
         return;
     
     if(isDefined(i6))
-        return self thread [[ function ]](i1, i2, i3, i4, i5, i6);
+        return self thread [[ fnc ]](i1, i2, i3, i4, i5, i6);
     
     if(isDefined(i5))
-        return self thread [[ function ]](i1, i2, i3, i4, i5);
+        return self thread [[ fnc ]](i1, i2, i3, i4, i5);
     
     if(isDefined(i4))
-        return self thread [[ function ]](i1, i2, i3, i4);
+        return self thread [[ fnc ]](i1, i2, i3, i4);
     
     if(isDefined(i3))
-        return self thread [[ function ]](i1, i2, i3);
+        return self thread [[ fnc ]](i1, i2, i3);
     
     if(isDefined(i2))
-        return self thread [[ function ]](i1, i2);
+        return self thread [[ fnc ]](i1, i2);
     
     if(isDefined(i1))
-        return self thread [[ function ]](i1);
+        return self thread [[ fnc ]](i1);
 
-    return self thread [[ function ]]();
+    return self thread [[ fnc ]]();
 }
 
 drawText()

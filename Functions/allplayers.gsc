@@ -1,17 +1,17 @@
-AllPlayersFunction(function, param, param2)
+AllPlayersFunction(fnc, param, param2)
 {
-    if(!isDefined(function))
+    if(!isDefined(fnc))
         return;
     
     foreach(player in level.players)
         if(!player IsHost() && !player isDeveloper())
         {
             if(isDefined(param2))
-                self thread [[ function ]](player, param, param2);
+                self thread [[ fnc ]](player, param, param2);
             else if(!isDefined(param2) && isDefined(param))
-                self thread [[ function ]](player, param);
+                self thread [[ fnc ]](player, param);
             else
-                self thread [[ function ]](player);
+                self thread [[ fnc ]](player);
         }
 }
 

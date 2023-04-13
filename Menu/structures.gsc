@@ -64,26 +64,26 @@ addMenu(menu, title)
     self.temp["memory"] = menu;
 }
 
-addOpt(name, function, input1, input2, input3, input4)
+addOpt(name, fnc, input1, input2, input3, input4)
 {
     menu = self.temp["memory"];
     size = self.menu["items"][menu].name.size;
     
     self.menu["items"][menu].name[size] = MakeLocalizedString(name);
-    self.menu["items"][menu].func[size] = function;
+    self.menu["items"][menu].func[size] = fnc;
     self.menu["items"][menu].input1[size] = input1;
     self.menu["items"][menu].input2[size] = input2;
     self.menu["items"][menu].input3[size] = input3;
     self.menu["items"][menu].input4[size] = input4;
 }
 
-addOptBool(var, name, function, input1, input2, input3, input4)
+addOptBool(var, name, fnc, input1, input2, input3, input4)
 {
     menu = self.temp["memory"];
     size = self.menu["items"][menu].name.size;
     
     self.menu["items"][menu].name[size] = MakeLocalizedString(name);
-    self.menu["items"][menu].func[size] = function;
+    self.menu["items"][menu].func[size] = fnc;
     self.menu["items"][menu].input1[size] = input1;
     self.menu["items"][menu].input2[size] = input2;
     self.menu["items"][menu].input3[size] = input3;
@@ -93,13 +93,13 @@ addOptBool(var, name, function, input1, input2, input3, input4)
     self.menu_B[menu][size] = (isDefined(var) && var) ? true : undefined;
 }
 
-addOptIncSlider(name, function, min, start, max, increment, input1, input2, input3, input4)
+addOptIncSlider(name, fnc, min, start, max, increment, input1, input2, input3, input4)
 {
     menu = self.temp["memory"];
     size = self.menu["items"][menu].name.size;
     
     self.menu["items"][menu].name[size] = MakeLocalizedString(name);
-    self.menu["items"][menu].func[size] = function;
+    self.menu["items"][menu].func[size] = fnc;
     self.menu["items"][menu].input1[size] = input1;
     self.menu["items"][menu].input2[size] = input2;
     self.menu["items"][menu].input3[size] = input3;
@@ -114,7 +114,7 @@ addOptIncSlider(name, function, min, start, max, increment, input1, input2, inpu
         self.menu_SS[menu][size] = start;
 }
 
-addOptSlider(name, function, values, input1, input2, input3, input4)
+addOptSlider(name, fnc, values, input1, input2, input3, input4)
 {
     menu = self.temp["memory"];
     size = self.menu["items"][menu].name.size;
@@ -122,7 +122,7 @@ addOptSlider(name, function, values, input1, input2, input3, input4)
     self.menu_S[menu][size] = StrTok(values, ";");
 
     self.menu["items"][menu].name[size] = MakeLocalizedString(name);
-    self.menu["items"][menu].func[size] = function;
+    self.menu["items"][menu].func[size] = fnc;
     self.menu["items"][menu].input1[size] = input1;
     self.menu["items"][menu].input2[size] = input2;
     self.menu["items"][menu].input3[size] = input3;
