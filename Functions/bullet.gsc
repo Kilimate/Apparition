@@ -14,7 +14,6 @@ BulletProjectile(projectile, type, player)
                 for(a = 0; a < player.ProjectileMultiplier; a++)
                 {
                     fire_origin = player GetWeaponMuzzlePoint();
-
                     MagicBullet(projectile, fire_origin, BulletTrace(fire_origin, fire_origin + player GetWeaponForwardDir() * 100, 0, undefined)["position"] + (RandomFloatRange((-1 * player.ProjectileSpreadMultiplier), player.ProjectileSpreadMultiplier), RandomFloatRange((-1 * player.ProjectileSpreadMultiplier), player.ProjectileSpreadMultiplier), RandomFloatRange((-1 * player.ProjectileSpreadMultiplier), player.ProjectileSpreadMultiplier)), player);
                 }
                 break;

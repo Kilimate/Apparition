@@ -9,7 +9,7 @@ DeleteEntity(ent)
         ent delete();
         
         self.menuParent[(self.menuParent.size - 1)] = undefined; //Remove entity submenu from parent array
-        self newMenu("Entity Editing List", true); //When entity is deleted and menu is removed from parent array, go back to 'Entity Editing List' submenu
+        self newMenu("Entity Editing List", true); //When the entity is deleted and menu is removed from parent array, go back to 'Entity Editing List' submenu
     }
     else //If the entity is the last entity in the array, it will exit to the main menu and undefine the array
     {

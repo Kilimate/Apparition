@@ -688,11 +688,15 @@ PlayerRevive(player)
 
 DownPlayer(player)
 {
+    if(player IsDown())
+        return self iPrintlnBold("^1ERROR: ^7Player Is Already Down");
+    
     if(isDefined(player.godmode))
         player Godmode(player);
 
     if(isDefined(player.DemiGod))
         player DemiGod(player);
     
+    player DisableInvulnerability(); //Just to ensure that the player is able to be damaged.
     player DoDamage(player.health + 999, (0, 0, 0));
 }

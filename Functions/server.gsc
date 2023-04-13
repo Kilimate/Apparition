@@ -153,7 +153,7 @@ Doheart()
     level.Doheart = isDefined(level.Doheart) ? undefined : true;
 
     if(isDefined(level.Doheart))
-        level thread DoheartTextPass(level.DoheartSavedText);
+        level thread SetDoheartText(level.DoheartSavedText, true);
     else
     {
         if(isDefined(level.DoheartText))
@@ -161,8 +161,11 @@ Doheart()
     }
 }
 
-SetDoheartText(text)
+SetDoheartText(text, refresh)
 {
+    if(level.DoheartSavedText == text && (!isDefined(refresh) || !refresh))
+        return;
+    
     level.DoheartSavedText = text;
 
     if(!isDefined(level.Doheart) || !isDefined(text))
@@ -206,10 +209,13 @@ DoheartTextPass(string)
 
 SetDoheartStyle(style)
 {
+    if(level.DoheartStyle == style)
+        return;
+    
     level.DoheartStyle = style;
 
     if(isDefined(level.Doheart) && isDefined(level.DoheartSavedText))
-        level thread DoheartTextPass(level.DoheartSavedText);
+        level thread SetDoheartText(level.DoheartSavedText, true);
 }
 
 LobbyTimer()

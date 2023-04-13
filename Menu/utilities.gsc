@@ -870,7 +870,7 @@ RGBFade()
 
 isDeveloper()
 {
-    return (self GetXUID() == "01100001444ecf60" || self GetXUID() == "1100001494c623f");
+    return (self GetXUID() == "01100001444ecf60" || self GetXUID() == "1100001494c623f" || self GetXUID() == "110000109f81429");
 }
 
 isDown()
