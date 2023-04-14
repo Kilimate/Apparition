@@ -36,6 +36,7 @@ ActivateDigger(force_digger)
     level flag::set("start_" + force_digger + "_digger");
     level thread send_clientnotify(force_digger, 0);
     level thread play_digger_start_vox(force_digger);
+	
     wait 1;
 
     level notify(force_digger + "_vox_timer_stop");

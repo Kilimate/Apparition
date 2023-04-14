@@ -216,23 +216,23 @@ hudScaleOverTime(time, width, height)
     wait time;
 }
 
-destroyAll(array)
+destroyAll(arry)
 {
-    if(!isDefined(array))
+    if(!isDefined(arry))
         return;
     
-    keys = GetArrayKeys(array);
+    keys = GetArrayKeys(arry);
 
     for(a = 0; a < keys.size; a++)
-        if(IsArray(array[keys[a]]))
+        if(IsArray(arry[keys[a]]))
         {
-            foreach(value in array[keys[a]])
+            foreach(value in arry[keys[a]])
                 if(isDefined(value))
                     value destroy();
         }
         else
-            if(isDefined(array[keys[a]]))
-                array[keys[a]] destroy();
+            if(isDefined(arry[keys[a]]))
+                arry[keys[a]] destroy();
 }
 
 getName()
@@ -269,25 +269,25 @@ isInMenu()
     return isDefined(self.menuState["isInMenu"]);
 }
 
-isInArray(array, text)
+isInArray(arry, text)
 {
-    for(a = 0; a < array.size; a++)
-        if(array[a] == text)
+    for(a = 0; a < arry.size; a++)
+        if(arry[a] == text)
             return true;
 
     return false;
 }
 
-ArrayRemove(array, value)
+ArrayRemove(arry, value)
 {
-    if(!isDefined(array) || !isDefined(value))
+    if(!isDefined(arry) || !isDefined(value))
         return;
     
     newArray = [];
 
-    for(a = 0; a < array.size; a++)
-        if(array[a] != value)
-            newArray[newArray.size] = array[a];
+    for(a = 0; a < arry.size; a++)
+        if(arry[a] != value)
+            newArray[newArray.size] = arry[a];
 
     return newArray;
 }

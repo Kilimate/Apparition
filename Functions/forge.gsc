@@ -145,12 +145,12 @@ ForgeDeleteLastSpawn()
 
     if(self.forge["SpawnedArray"].size > 1)
     {
-        array = [];
+        arry = [];
 
         for(a = 0; a < (self.forge["SpawnedArray"].size - 1); a++)
-            array[array.size] = self.forge["SpawnedArray"][a];
+            arry[arry.size] = self.forge["SpawnedArray"][a];
         
-        self.forge["SpawnedArray"] = array;
+        self.forge["SpawnedArray"] = arry;
     }
     else
         self.forge["SpawnedArray"] = undefined;

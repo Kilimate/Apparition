@@ -1320,49 +1320,6 @@ function_361f6caa(ai_zombie, type)
 	return ai_zombie.var_9a02a614 === type;
 }
 
-function_3efae612(zombie)
-{
-	zombie.knockdown = 1;
-	zombie.knockdown_type = "knockdown_shoved";
-	zombie_to_mechz = self.origin - zombie.origin;
-	zombie_to_mechz_2d = VectorNormalize((zombie_to_mechz[0], zombie_to_mechz[1], 0));
-	zombie_forward = AnglesToForward(zombie.angles);
-	zombie_forward_2d = VectorNormalize((zombie_forward[0], zombie_forward[1], 0));
-	zombie_right = AnglesToRight(zombie.angles);
-	zombie_right_2d = VectorNormalize((zombie_right[0], zombie_right[1], 0));
-	dot = VectorDot(zombie_to_mechz_2d, zombie_forward_2d);
-
-	if(dot >= 0.5)
-	{
-		zombie.knockdown_direction = "front";
-		zombie.getup_direction = "getup_back";
-	}
-	else if(dot < 0.5 && dot > -0.5)
-	{
-		dot = VectorDot(zombie_to_mechz_2d, zombie_right_2d);
-
-		if(dot > 0)
-		{
-			zombie.knockdown_direction = "right";
-
-			if(math::cointoss())
-				zombie.getup_direction = "getup_back";
-			else
-				zombie.getup_direction = "getup_belly";
-		}
-		else
-		{
-			zombie.knockdown_direction = "left";
-			zombie.getup_direction = "getup_belly";
-		}
-	}
-	else
-	{
-		zombie.knockdown_direction = "back";
-		zombie.getup_direction = "getup_belly";
-	}
-}
-
 function_f4defbc2()
 {
 	if(isDefined(self))

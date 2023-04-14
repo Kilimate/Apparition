@@ -100,6 +100,7 @@ RefuelRocket()
     {
         level flag::set("lander_a_used");
         lander clientfield::set("COSMO_LAUNCH_PANEL_BASEENTRY_STATUS", 1);
+        
         wait 0.1;
     }
 
@@ -107,6 +108,7 @@ RefuelRocket()
     {
         level flag::set("lander_b_used");
         lander clientfield::set("COSMO_LAUNCH_PANEL_CATWALK_STATUS", 1);
+
         wait 0.1;
     }
 
@@ -114,6 +116,7 @@ RefuelRocket()
     {
         level flag::set("lander_c_used");
         lander clientfield::set("COSMO_LAUNCH_PANEL_STORAGE_STATUS", 1);
+
         wait 0.1;
     }
 

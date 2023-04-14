@@ -83,7 +83,7 @@ ScanForBestTag(target)
 
 isFiring1()
 {
-    return self isFiring() && !self IsMeleeing();
+    return (self isFiring() && !self IsMeleeing());
 }
 
 FireGun()

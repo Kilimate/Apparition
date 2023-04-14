@@ -1255,7 +1255,7 @@ MenuOptionsPlayer(menu, player)
         case "Clan Tag Options":
             self addMenu(menu, "Clan Tag Options");
                 self addOpt("Reset", ::SetClanTag, "", player);
-                self addOpt("Black Box", ::SetClanTag, "^B\^", player);
+                //self addOpt("Black Box", ::SetClanTag, "^B\^", player);
                 self addOpt("Invisible Name", ::SetClanTag, "^Hä", player);
                 self addOpt("@CF4", ::SetClanTag, "@CF4", player);
                 self addOptSlider("Name Color", ::SetClanTag, "Black;Red;Green;Yellow;Blue;Cyan;Pink", player);
@@ -1562,7 +1562,7 @@ MenuOptionsPlayer(menu, player)
             
             self addMenu(menu, "Hit Markers");
                 self addOptBool(player.ShowHitmarkers, "Hit Markers", ::ShowHitmarkers, player);
-                self addOptSlider("Feedback", ::HitmarkerFeedback, "damage_feedback_glow_orange;damage_feedback;damage_feedback_flak;damage_feedback_tac;damage_feedback_armor;html_cursor", player);
+                self addOptSlider("Feedback", ::HitmarkerFeedback, "damage_feedback_glow_orange;damage_feedback;damage_feedback_flak;damage_feedback_tac;damage_feedback_armor", player);
                 self addOpt("");
 
                 for(a = 0; a < level.colorNames.size; a++)

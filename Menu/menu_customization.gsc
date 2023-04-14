@@ -64,9 +64,9 @@ SmoothRainbowTheme()
     }
 }
 
-CustomMenuRGB(int, RGB)
+CustomMenuRGB(int, input)
 {
-    switch(RGB)
+    switch(input)
     {
         case "R":
             color = ((int / 255), self.menu["Main_Color"][1], self.menu["Main_Color"][2]);
